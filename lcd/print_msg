@@ -1,0 +1,8 @@
+#!/bin/sh
+
+ sed "s/%MSG%/$1/g" print.c > /tmp/p.c
+avr-gcc -W -Wall  -Os  -mmcu=atmega8  lcd.c /tmp/p.c
+avr-objcopy -O ihex -R .eeprom a.out A.hex
+avrdude -c sp12 -p m8 -P /dev/parport0  -V -U flash:w:A.hex
+rm a.out A.hex /tmp/p.c
+
