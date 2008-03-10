@@ -1,13 +1,3 @@
- /*********************************************
-* vim: set sw=8 ts=8 si :
-* Author: Guido Socher, Copyright: GPL 
-* This program is to test the led connected to
-* PC5. 
-* See http://linuxfocus.org/English/November2004/
-* for details.
-* Chip type           : ATMEGA8
-* Clock frequency     : Internal clock 1 Mhz (factory default)
-*********************************************/
 
 #define  F_CPU 3686400
 #include <avr/io.h>
