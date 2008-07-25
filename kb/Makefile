@@ -11,7 +11,7 @@ CC=avr-gcc
 CFLAGS=-W -Wall -Os -Wno-unused -I. -I..  -mmcu=$(MMCU)
 LDFLAGS=
 
-SRC=main.c ../lcd/lcd.c ../util/delay.c
+SRC=main.c ../lcd/lcd.c kb.c
 OBJS=$(SRC:.c=.o)
 
 TARGET=A.hex
