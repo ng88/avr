@@ -1,7 +1,13 @@
-// Keyboard communication routines
+/* Keyboard communication routines
+ * Contributors:
+ *   scienceprog.com
+ *   Nicolas GUILLAUME <ng@ngosft-fr.com>
+ */
+
 
 #ifndef __KB_INCLUDED
 #define __KB_INCLUDED
+
 
 #include <avr/interrupt.h>
 //#include "io8515.h"

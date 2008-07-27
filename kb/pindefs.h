@@ -1,3 +1,7 @@
+/* 
+ *  Author: Nicolas GUILLAUME <ng@ngosft-fr.com>
+ */
+
 #ifndef PINDEF_H
 #define PINDEF_H
 

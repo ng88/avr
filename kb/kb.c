@@ -1,3 +1,10 @@
+/* Keyboard communication routines
+ * Contributors:
+ *   scienceprog.com
+ *   Nicolas GUILLAUME <ng@ngosft-fr.com>
+ */
+
+
 #include "kb.h"
 #include "scancodes.h"
 
@@ -65,9 +72,6 @@ void decode(unsigned char sc)
             break;
 
           case 0x12 :        // Left SHIFT
-            shift = 1;
-            break;
-
           case 0x59 :        // Right SHIFT
             shift = 1;
             break;
@@ -106,9 +110,6 @@ void decode(unsigned char sc)
         switch (sc)
         {
           case 0x12 :                        // Left SHIFT
-            shift = 0;
-            break;
-            
           case 0x59 :                        // Right SHIFT
             shift = 0;
             break;

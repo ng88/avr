@@ -1,3 +1,7 @@
+/* 
+ *  Author: Nicolas GUILLAUME <ng@ngosft-fr.com>
+ */
+
 // Unshifted characters
 unsigned char unshifted[][2] = {
 0x0d,9,

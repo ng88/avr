@@ -1,3 +1,7 @@
+/* 
+ *  Author: Nicolas GUILLAUME <ng@ngosft-fr.com>
+ */
+
 #define  F_CPU 3686400
 #include <stdlib.h>
 #include <avr/io.h>
