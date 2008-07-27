@@ -1,8 +1,10 @@
 /* 
  *  Author: Nicolas GUILLAUME <ng@ngosft-fr.com>
  */  
+
+#ifndef SCANCODES_QWERTY_H
+#define SCANCODES_QWERTY_H
     
-// Unshifted characters
 unsigned char unshifted[][2] = {
     {0x0d, 9},
     {0x0e, '|'},
@@ -76,7 +78,6 @@ unsigned char unshifted[][2] = {
 
 
 
-// Shifted characters
 unsigned char shifted[][2] = {
     {0x0d, 9},
     {0x0e, '§'},
@@ -147,5 +148,7 @@ unsigned char shifted[][2] = {
     {0x7d, '9'},
     {0, 0} 
 };
+
+#endif
 
 

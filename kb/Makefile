@@ -18,6 +18,9 @@ TARGET=A.hex
 
 all: $(TARGET)
 
+kb.o: pindefs.h kb.h scancodes.h
+main.o: kb.h
+
 $(TARGET): a.out
 	avr-objcopy -O ihex -R .eeprom a.out A.hex
 
