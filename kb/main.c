@@ -11,8 +11,11 @@
 #include "serial.h"
 
 
-int main(void) {
+int main()
+{
 	uart_init(); // init USART
+	kb_init();
+	GIMSK |= 0x40;
 	sei();  // enable interrupts
 	
 	// send initial character
@@ -21,15 +24,22 @@ int main(void) {
 	while(!(UCSRA & (1 << UDRE)));
 	UDR = 0x0d;
 
+	uart_puts("salut \n\r");
+
 	// enable  PD5 as output
 	DDRD |= (1<<PD5);
+	DDRD |= (1<<PD7);
 	while (1) {
 		// PIN5 PORTD clear -> LED off
 		PORTD &= ~(1 << PD5);
+
 		uart_delay_ms(500);
 		// PIN5 PORTD set -> LED on
 		PORTD |= (1 << PD5);
-		uart_delay_ms(500);	
+
+		uart_delay_ms(500);
+		//uart_putc('a');
+		//kb_getchar();
 	}
 	return 0;
 }

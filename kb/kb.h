@@ -15,15 +15,15 @@
 #define ISC00 0
 #define ISC01 1
 
-void init_kb(void);
+void kb_init(void);
 
 ISR(INT0_vect);
 
-void decode(unsigned char sc);
+void kb_decode(unsigned char sc);
 
-void put_kbbuff(unsigned char c);
+void kb_put_buff(unsigned char c);
 
-int getchar(void);
+int kb_getchar();
 
 
 #endif
