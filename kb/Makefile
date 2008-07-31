@@ -7,11 +7,18 @@ PROGRAMMER=sp12
 PORT=/dev/parport0
 DUDEFLAGS=-E noreset
 
+
+ifdef KB_KEYMAP
+	KM=-DKB_KEYMAP_$(KB_KEYMAP)
+else
+	KM=-DKB_KEYMAP_QWERTY
+endif
+
 CC=avr-gcc
-CFLAGS=-W -Wall -Os -Wno-unused -I. -I..  -mmcu=$(MMCU)
+CFLAGS=-W -Wall -Os -Wno-unused -I. -I..  -mmcu=$(MMCU) $(KM)
 LDFLAGS=
 
-SRC=main.c ../lcd/lcd.c kb.c
+SRC=main.c kb.c serial.c
 OBJS=$(SRC:.c=.o)
 
 TARGET=A.hex

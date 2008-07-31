@@ -5,12 +5,11 @@
  */
 
 
-#ifndef __KB_INCLUDED
-#define __KB_INCLUDED
+#ifndef KB_H
+#define KB_H
 
 
 #include <avr/interrupt.h>
-//#include "io8515.h"
 #include "pindefs.h"
 
 #define ISC00 0
@@ -28,4 +27,3 @@ int getchar(void);
 
 
 #endif
-

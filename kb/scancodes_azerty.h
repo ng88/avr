@@ -2,18 +2,20 @@
  *  Author: Nicolas GUILLAUME <ng@ngosft-fr.com>
  */  
 
-#ifndef SCANCODES_QWERTY_H
-#define SCANCODES_QWERTY_H
+#ifndef SCANCODES_AZERTY_H
+#define SCANCODES_AZERTY_H
+
+#warning "AZERTY key map not finished yet"
 
 unsigned char unshifted[][2] = {
     {0x0d, 9},
     {0x0e, '|'},
-    {0x15, 'q'},
+    {0x15, 'a'},
     {0x16, '1'},
-    {0x1a, 'z'},
+    {0x1a, 'w'},
     {0x1b, 's'},
-    {0x1c, 'a'},
-    {0x1d, 'w'},
+    {0x1c, 'q'},
+    {0x1d, 'z'},
     {0x1e, '2'},
     {0x21, 'c'},
     {0x22, 'x'},
@@ -81,12 +83,12 @@ unsigned char unshifted[][2] = {
 unsigned char shifted[][2] = {
     {0x0d, 9},
     {0x0e, '§'},
-    {0x15, 'Q'},
+    {0x15, 'A'},
     {0x16, '!'},
-    {0x1a, 'Z'},
+    {0x1a, 'W'},
     {0x1b, 'S'},
-    {0x1c, 'A'},
-    {0x1d, 'W'},
+    {0x1c, 'Q'},
+    {0x1d, 'Z'},
     {0x1e, '"'},
     {0x21, 'C'},
     {0x22, 'X'},
