@@ -1,11 +1,8 @@
-/*********************************************
-* Chip type           : ATmega16
-* Clock frequency     : 4,000000 MHz
-*********************************************/
+#include "serial.h"
+
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <inttypes.h>
-
 
 #define UART_BAUD_CALC(UART_BAUD_RATE,F_OSC) ((F_OSC)/((UART_BAUD_RATE)*16l)-1)
 
@@ -53,7 +50,7 @@ void uart_init() {
 SIGNAL (SIG_UART_RECV) { // USART RX interrupt
 	unsigned char c;
 	c = UDR;
-	usart_putc(c);
+	uart_putc(c);
 }
 
 
