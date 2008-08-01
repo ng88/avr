@@ -1,6 +1,7 @@
 
 # Author: Nicolas GUILLAUME <ng@ngsoft-fr.com>
 
+FCPU=3686400
 MMCU=atmega8
 PART=m8
 PROGRAMMER=sp12
@@ -15,10 +16,10 @@ else
 endif
 
 CC=avr-gcc
-CFLAGS=-W -Wall -Os -Wno-unused -I. -I..  -mmcu=$(MMCU) $(KM)
+CFLAGS=-W -Wall -Os -Wno-unused -I. -I.. -mmcu=$(MMCU) -DF_CPU=$(FCPU) $(KM)
 LDFLAGS=
 
-SRC=main.c kb.c serial.c
+SRC=main.c kb.c ../serial.c
 OBJS=$(SRC:.c=.o)
 
 TARGET=A.hex
