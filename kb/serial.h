@@ -1,8 +1,7 @@
 #ifndef SERIAL_H
 #define SERIAL_H
 
-
-#define F_OSC F_CPU
+#define F_OSC 3686400
 #define UART_BAUD_RATE 38400
 //9600
 

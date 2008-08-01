@@ -26,6 +26,7 @@ int main()
 
 	uart_puts("salut \n\r");
 
+	char a = 'a';
 	// enable  PD5 as output
 	DDRD |= (1<<PD5);
 	DDRD |= (1<<PD7);
@@ -38,7 +39,8 @@ int main()
 		PORTD |= (1 << PD5);
 
 		uart_delay_ms(500);
-		//uart_putc('a');
+		uart_putc(a++);
+		if(a > 'z') a = 'a';
 		//kb_getchar();
 	}
 	return 0;
