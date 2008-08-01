@@ -19,7 +19,7 @@ CC=avr-gcc
 CFLAGS=-W -Wall -Os -Wno-unused -I. -I.. -mmcu=$(MMCU) -DF_CPU=$(FCPU) $(KM)
 LDFLAGS=
 
-SRC=main.c kb.c ../serial.c
+SRC=main.c kb.c ../serial/serial.c
 OBJS=$(SRC:.c=.o)
 
 TARGET=A.hex

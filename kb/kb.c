@@ -8,7 +8,7 @@
 #include "kb.h"
 #include "scancodes.h"
 
-#include "serial.h"
+#include <serial/serial.h>
 
 #define BUFF_SIZE 64
 

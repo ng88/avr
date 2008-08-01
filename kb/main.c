@@ -6,8 +6,10 @@
 #include <avr/io.h>
 #include <avr/pgmspace.h>
 
+#include <serial/serial.h>
+
 #include "kb.h"
-#include "serial.h"
+
 
 
 int main()
@@ -23,7 +25,7 @@ int main()
 	while(!(UCSRA & (1 << UDRE)));
 	UDR = 0x0d;
 
-	uart_puts("salut \n\r");
+	uart_puts("\r\n\r\nsalut \r\nCeci est un test !\r\n");
 
 	char a = 'a';
 	// enable  PD5 as output
