@@ -23,12 +23,10 @@
 
 
 #if !defined(__DOXYGEN__)
-static inline void delay_ms(double __ms) __attribute__((always_inline));
+static inline void delay_ms(unsigned short __ms) __attribute__((always_inline));
 #endif
 
-
-/** Wait ms milliseconds.
- */
+/*
 void delay_ms(double ms)
 {
     double tw;
@@ -43,9 +41,8 @@ void delay_ms(double ms)
 }
 
 
-/** Wait ms milliseconds.
- */
-void delay_ms2(double ms)
+
+void delay_ms(double ms)
 {
     register int k = (ms / _DMS_LIMIT) + 1;
     register int i;
@@ -53,8 +50,23 @@ void delay_ms2(double ms)
     for(i = 0; i < k; ++i)
 	_delay_ms(_DMS_LIMIT);
 }
+*/
 
 
-
+void delay_ms(unsigned short ms)
+{
+    unsigned short outer1, outer2;
+    outer1 = 200;
+    while(outer1)
+    {
+	outer2 = 1000;
+	while(outer2)
+	{
+	    while(ms) ms--;
+	    outer2--;
+	}
+	outer1--;
+    }
+}
 
 #endif

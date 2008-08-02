@@ -17,8 +17,8 @@
 #ifndef ASSERT_DEBUG_H
 #define ASSERT_DEBUG_H
 
-#include <lcutil/iomin.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 /** check that cond is true, str is displayed if it fails */
 #define c_assert2(cond, str) __assert((cond), __LINE__, __FILE__, ___FUNCTION, (str), #cond)
@@ -38,7 +38,7 @@
 #ifndef DISABLE_DEBUG_PRINT
 
 #define dbg_printf(args ...) \
-          do {mio_printf("debug> line %d: in %s::%s(): ", __LINE__, __FILE__, ___FUNCTION); mio_printf(args);} while(0)
+          do {printf("debug> line %d: in %s::%s(): ", __LINE__, __FILE__, ___FUNCTION); printf(args);} while(0)
 
 #else
 
@@ -51,9 +51,9 @@
 
 
 #define __assert(cond, line, file, fn, str, cond_str) \
-          do { if(!cond) { mio_printf("assertion error on `" cond_str "' in "  file "::%s() at line %d: %s%n", fn, line, str); abort(); } } while(0)
+          do { if(!cond) { printf("assertion error on `" cond_str "' in "  file "::%s() at line %d: %s%n", fn, line, str); abort(); } } while(0)
 #define __warning(cond, line, file, fn, str, cond_str) \
-          do { if(!cond) { mio_printf("warning on `" cond_str "' in " file "::%s() at line %d: %s%n", fn, line, str) ; } } while(0)
+          do { if(!cond) { printf("warning on `" cond_str "' in " file "::%s() at line %d: %s%n", fn, line, str) ; } } while(0)
 
 #else
 

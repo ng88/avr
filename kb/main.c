@@ -7,27 +7,23 @@
 #include <avr/pgmspace.h>
 
 #include <serial/serial.h>
+#include <lcutil/delay.h>
+#include <lcutil/assert.h>
 
 #include "kb.h"
 
 
-
 int main()
 {
-	uart_init(); // init USART
+	uart_init();
 	kb_init();
-	GIMSK |= 0x40;
-	sei();  // enable interrupts
-	
-	// send initial character
-	while(!(UCSRA & (1 << UDRE)));
-	UDR = 0x43; // "C"
-	while(!(UCSRA & (1 << UDRE)));
-	UDR = 0x0d;
 
-	uart_puts("\r\n\r\nsalut \r\nCeci est un test !\r\n");
+	GIMSK |= 0x40;
+	sei();
+	
 
 	char a = 'a';
+
 	// enable  PD5 as output
 	DDRD |= (1<<PD5);
 	DDRD |= (1<<PD7);
@@ -35,12 +31,12 @@ int main()
 		// PIN5 PORTD clear -> LED off
 		PORTD &= ~(1 << PD5);
 
-		uart_delay_ms(500);
+		delay_ms(500);
 		// PIN5 PORTD set -> LED on
 		PORTD |= (1 << PD5);
 
-		uart_delay_ms(500);
-		uart_putc(a++);
+		delay_ms(500);
+		uart_putchar(a++, 0);
 		if(a > 'z') a = 'a';
 		//kb_getchar();
 	}
