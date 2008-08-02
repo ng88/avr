@@ -17,7 +17,7 @@ int uart_putchar(char c, FILE * stream)
     return 0;
 }
 
-void uart_init()
+void uart_init(int enable_stream)
 {
     // Qet baud rate
     UBRRH = (uint8_t)(UART_BAUD_CALC(UART_BAUD_RATE,F_OSC)>>8);
@@ -29,7 +29,8 @@ void uart_init()
     // Asynchronous 8N1
     UCSRC = (1 << URSEL) | (3 << UCSZ0);
 
-    stderr = stdout = &uart_stdout;
+    if(enable_stream)
+	stderr = stdout = &uart_stdout;
 }
 
 // INTERRUPT can be interrupted
