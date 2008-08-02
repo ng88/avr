@@ -1,0 +1,4 @@
+dump hfuse
+0000  d9
+dump lfuse
+0000  ff

@@ -26,42 +26,31 @@ void usart_init(int enable_stream)
     UBRRH = (uint8_t)(USART_BAUD_CALC(USART_BAUD_RATE,F_OSC) >> 8);
     UBRRL = (uint8_t)USART_BAUD_CALC(USART_BAUD_RATE,F_OSC);
 
-     // Enable receiver and transmitter; enable RX interrupt
-    UCSRB = _BV(RXEN) | _BV(TXEN) | _BV(RXCIE);
+    loop_until_bit_is_clear(UCSRA, RXC);
+    loop_until_bit_is_set(UCSRA, UDRE);
+    
+    // Enable receiver and transmitter; enable RX interrupt
+    UCSRB = _BV(RXEN) | _BV(TXEN) ;//| _BV(RXCIE);
  
     // Asynchronous 8N1
-    UCSRC = _BV(URSEL) | (3 << UCSZ0);
-
+//    UCSRC = _BV(URSEL) | (3 << UCSZ0);
+    UCSRC = (1<<URSEL)|(1<<USBS)|(3<<UCSZ0);
     if(enable_stream)
 	stderr = stdout = &usart_stdout;
+
 }
 
-
-// INTERRUPT can be interrupted
-// SIGNAL can't be interrupted
-SIGNAL (SIG_USART_RECV) { // USART RX interrupt
-	unsigned char c;
-	c = UDR;
-	PORTD |= _BV(PD5);
-	delay_ms(100);
-	PORTD &= ~_BV(PD5);
-	usart_putchar(c, 0);
-}
-
-static char c = 0;
-
-ISR(USART_RX_vect)
-{
-    //if(UCSRA & _BV(RXC))
-        c = UDR;
-}
 
 int usart_getchar()
 {
 
-    while (!(UCSRA & 0x01));
-
-return (UDR); 
+while ( !(UCSRA & (1<<RXC)) );      // RXC: USART Recieve Complete
+       
+    return UDR; 
+/*
+   loop_until_bit_is_set(UCSRA, RXC);
+   return UDR;
+*/
 }
 
 

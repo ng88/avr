@@ -15,32 +15,35 @@
 
 int main()
 {
-	usart_init(1);
-	kb_init();
+    DDRD |= _BV(PD5);
+    DDRD |= _BV(PD7);
 
-	//GIMSK |= 0x40;
-	sei();
+    usart_init(1);
+    //kb_init();
+    
+    //GIMSK |= 0x40;
+    sei();
+    
+    // enable  PD5 as output
+  
+
+    printf("Entrez des trucs > \n"); 
+
+    while(1)
+	printf("in=[%c]\n", usart_getchar());
+
+    while (1)
+    {
+	// PIN5 PORTD clear -> LED off
+	PORTD &= ~_BV(PD5);
 	
-	putchar('\n');
-	char a = usart_getchar();
-
-	// enable  PD5 as output
-	DDRD |= _BV(PD5);
-	DDRD |= _BV(PD7);
-	while (1) {
-		// PIN5 PORTD clear -> LED off
-		PORTD &= ~_BV(PD5);
-
-		delay_ms(500);
-		// PIN5 PORTD set -> LED on
-		PORTD |= _BV(PD5);
-
-		delay_ms(500);
-		putchar(a++);
-		if(a > 'z') a = 'a';
-		//kb_getchar();
-	}
-	return 0;
+	delay_ms(500);
+	// PIN5 PORTD set -> LED on
+	PORTD |= _BV(PD5);
+	
+	delay_ms(500);
+    }
+    return 0;
 }
 
 
