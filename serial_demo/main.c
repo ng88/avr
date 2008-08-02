@@ -11,7 +11,7 @@
 
 int main()
 {
-	uart_init(1);
+	usart_init(1);
 	putc('\n', stdout);
 	puts("Hello World!");
 	return 0;

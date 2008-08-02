@@ -2,14 +2,17 @@
 #define SERIAL_H
 
 #define F_OSC F_CPU
-#define UART_BAUD_RATE 38400
+#define USART_BAUD_RATE 38400
 //9600
 
 #include <stdio.h>
 
-int uart_putchar(char c, FILE * stream);
-void uart_delay_ms(unsigned short ms);
-void uart_init(int enable_stream);
+int usart_putchar(char c, FILE * stream);
+int usart_getchar();
+void usart_delay_ms(unsigned short ms);
+void usart_init(int enable_stream);
+
+
 
 #endif
 

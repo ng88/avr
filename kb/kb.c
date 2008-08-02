@@ -44,10 +44,6 @@ void kb_init(void)
 
 ISR(INT0_vect)
 {
-    PORTD |= (1 << PD7);
-    int a=2048;while(a--);
-    PORTD &= ~(1 << PD7);
-//    uart_putc('l');
     static unsigned char data;  // Holds the received scan code
 
     if(!edge)                   // Routine entered at falling edge
