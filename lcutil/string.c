@@ -20,7 +20,7 @@
 #include <lcutil/string.h>
 
 	
-void itoa(int value, char * str, int base)
+char * mio_itoa(int value, char * str, int base)
 {
     static char num[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     
@@ -31,7 +31,7 @@ void itoa(int value, char * str, int base)
     if (base<2 || base>35)
     {
 	*wstr = '\0';
-	return;
+	return str;
     }
 	
     if((sign = value) < 0)
@@ -50,6 +50,8 @@ void itoa(int value, char * str, int base)
     
     *wstr = '\0';
     strreverse(str, wstr - 1);
+
+    return str;
 }
 
 

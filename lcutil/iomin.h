@@ -17,7 +17,7 @@
 #ifndef IOMIN_H
 #define IOMIN_H
 
-#include <lcutil/string.h>
+#include <stdlib.h>
 #include "mio_config.h"
 
 /**
@@ -59,8 +59,7 @@ static inline void mio_printi(int __i, int __base) __attribute__((always_inline)
 void mio_printi(int i, int base)
 {
     char buff[16];
-    itoa(i, buff, base);
-    mio_puts(buff);
+    mio_puts(itoa(i, buff, base));
 }
 
 #endif
