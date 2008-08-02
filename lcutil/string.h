@@ -1,7 +1,7 @@
 /***************************************************************************
- *   This file is part of the 'utils' projects                             *
+ *   This file is part of the 'avrutils' projects                             *
  *                                                                         *
- *   'utils' projects                                                      *
+ *   'avrutils' projects                                                      *
  *                                                                         *
  *   Copyright (C) 2006, 2008 by GUILLAUME Nicolas                         *
  *   ng@ngsoft-fr.com                                                      *
@@ -12,7 +12,7 @@
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; version 2 of the License only.          *
  *   See the COPYING file.                                                 *
- ***************************************************************************/                                                                
+ ***************************************************************************/
 
 #ifndef LCSTRING_H
 #define LCSTRING_H

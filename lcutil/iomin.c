@@ -1,3 +1,19 @@
+/***************************************************************************
+ *   This file is part of the 'avrutils' projects                             *
+ *                                                                         *
+ *   'avrutils' projects                                                      *
+ *                                                                         *
+ *   Copyright (C) 2006, 2008 by GUILLAUME Nicolas                         *
+ *   ng@ngsoft-fr.com                                                      *
+ *                                                                         *
+ *   http://svn.ngsoft-fr.com/trac/utils/                                  *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; version 2 of the License only.          *
+ *   See the COPYING file.                                                 *
+ ***************************************************************************/
+
 #include <stdarg.h>
 #include <lcutil/iomin.h>
 
@@ -27,8 +43,9 @@ void mio_printf(const char * s, ...)
 	    switch(*s)
 	    {
 	    case 'n': mio_puts(MIO_CFG_LN_BREAK); break;
-	    case 'd': mio_printi(va_arg(ap, int), 10); break;
+	    case 'p': mio_puts("0x");
 	    case 'h': mio_printi(va_arg(ap, int), 16); break;
+	    case 'd': mio_printi(va_arg(ap, int), 10); break;
 	    case 'o': mio_printi(va_arg(ap, int), 8); break;
 	    case 'b': mio_printi(va_arg(ap, int), 2); break;
 	    case 's': mio_puts(va_arg(ap, char*)); break;
@@ -37,19 +54,12 @@ void mio_printf(const char * s, ...)
 	    }
 	    state = NORMAL;
 	}
-	*s++;
+	s++;
     }
     va_end(ap);
 }
 
-int main()
-{
-    char * s = "hohihih"; 
-    char c = 'R';
-    mio_printf("salut %s %% %n %s %c (%h)(%o)(%b) %n%n", "LO", s, c,
-	       12, 87, c);
-    return 0;
-}
+
 
 
 

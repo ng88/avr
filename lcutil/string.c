@@ -1,3 +1,20 @@
+/***************************************************************************
+ *   This file is part of the 'avrutils' projects                             *
+ *                                                                         *
+ *   'avrutils' projects                                                      *
+ *                                                                         *
+ *   Copyright (C) 2006, 2008 by GUILLAUME Nicolas                         *
+ *   ng@ngsoft-fr.com                                                      *
+ *                                                                         *
+ *   http://svn.ngsoft-fr.com/trac/utils/                                  *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; version 2 of the License only.          *
+ *   See the COPYING file.                                                 *
+ ***************************************************************************/
+
+
 #include <stdarg.h>
 #include <stdlib.h>
 #include <lcutil/string.h>
@@ -26,7 +43,7 @@ void itoa(int value, char * str, int base)
 	*wstr++ = num[res.rem];
 	
     }
-    while(value = res.quot);
+    while( (value = res.quot) );
 	
     if(sign<0)
 	*wstr++ = '-';
