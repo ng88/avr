@@ -12,8 +12,8 @@
 #include <avr/interrupt.h>
 #include "pindefs.h"
 
-#define ISC00 0
-#define ISC01 1
+#define ISC0_FALLING_EDGE 2
+#define ISC0_RISING_EDGE 3
 
 void kb_init(void);
 

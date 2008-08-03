@@ -1,12 +1,11 @@
 /* Keyboard communication routines
- * Contributors:
- *   scienceprog.com
- *   Nicolas GUILLAUME <ng@ngosft-fr.com>
+ *  Author:  Nicolas GUILLAUME <ng@ngosft-fr.com>
  */
 
 
 #include "kb.h"
 #include "scancodes.h"
+#include <lcutil/delay.h>
 
 #define BUFF_SIZE 64
 
@@ -24,8 +23,6 @@ enum
     MODE_LSC = 3
 };
 
-unsigned char edge, bitcount;   // 0 = neg.  1 = pos.
-
 unsigned char kb_buffer[BUFF_SIZE];
 unsigned char *inpt, *outpt;
 unsigned char buffcnt;
@@ -37,43 +34,70 @@ void kb_init(void)
     outpt = kb_buffer;
     buffcnt = 0;
 
-    MCUCR = 2;                  // INT0 interrupt on falling edge
-    edge = FALLING_EDGE;
-    bitcount = 11;
+    MCUCR = ISC0_FALLING_EDGE;
+
 }
 
 ISR(INT0_vect)
 {
-    static unsigned char data;  // Holds the received scan code
 
-    if(!edge)                   // Routine entered at falling edge
+    static unsigned char data = 0;  // Holds the received scan code
+
+    static unsigned char bitcount = 11;
+    static unsigned char edge = FALLING_EDGE;
+
+    /** 11 bits:
+     *  Start (0)
+     *  0..7 data byte  (Least significant bit first)
+     *  Parity (odd)
+     *  Stop (1)
+     */
+	
+    if(bitcount > 2 && bitcount < 11)       // Bit 3 to 10 is data. Parity bit,
+    {                       // start and stop bits are ignored.
+	data = (data >> 1);
+	if(bit_is_set(PIN_KB, DATAPIN))
+	    data = data | 0x80; // store a 1
+    }
+
+    if(--bitcount == 0)     // All bits received
     {
-        if(bitcount < 11 && bitcount > 2)       // Bit 3 to 10 is data. Parity bit,
+	bitcount = 11;
+	kb_decode(data);
+	data = 0;
+    }
+
+
+    /*if(!edge)                   // Routine entered at falling edge
+    {
+        if(bitcount > 2 && bitcount < 11)       // Bit 3 to 10 is data. Parity bit,
         {                       // start and stop bits are ignored.
             data = (data >> 1);
-            if(PIND & 8)
+            if(bit_is_set(PIN_KB, DATAPIN))
                 data = data | 0x80;     // Store a '1'
         }
 
-        MCUCR = 3;              // Set interrupt on rising edge
+        MCUCR = ISC0_RISING_EDGE;              // Set interrupt on rising edge
         edge = RISING_EDGE;
 
     }
     else
     {                           // Routine entered at rising edge
 
-        MCUCR = 2;              // Set interrupt on falling edge
+        MCUCR = ISC0_FALLING_EDGE;              // Set interrupt on falling edge
         edge = FALLING_EDGE;
 
         if(--bitcount == 0)     // All bits received
         {
+	    //printf("decode (%d)\n", data);
             kb_decode(data);
             bitcount = 11;
         }
     }
+	*/
 }
 
-
+/*
 void kb_decode_old(unsigned char sc)
 {
     static unsigned char is_up = 0, shift = 0, mode = 0;
@@ -149,12 +173,14 @@ void kb_decode_old(unsigned char sc)
             break;
         }
     }
-}
+}*/
 
 void kb_decode(unsigned char sc)
 {
     static unsigned char is_up=0, shift = 0, mode = 0;
     unsigned char i;
+//OxE0  first byte of extended
+    printf("DECODE is_up=%d, shift=%d, mode=%d, sc=%d\n", is_up, shift, mode, sc);
 
     if (!is_up)                // Last data received was the up-key identifier
     {
@@ -228,6 +254,7 @@ void kb_decode(unsigned char sc)
 
 void kb_put_buff(unsigned char c)
 {
+    printf("char=%c %d\n", c, c);
     if(buffcnt < BUFF_SIZE)     // If buffer not full
     {
         *inpt = c;              // Put character into buffer

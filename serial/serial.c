@@ -30,23 +30,29 @@ void usart_init(int enable_stream)
     loop_until_bit_is_set(UCSRA, UDRE);
     
     // Enable receiver and transmitter; enable RX interrupt
-    UCSRB = _BV(RXEN) | _BV(TXEN) ;//| _BV(RXCIE);
+    UCSRB = _BV(RXEN) | _BV(TXEN) | _BV(RXCIE);
  
     // Asynchronous 8N1
-//    UCSRC = _BV(URSEL) | (3 << UCSZ0);
-    UCSRC = (1<<URSEL)|(1<<USBS)|(3<<UCSZ0);
+    UCSRC = _BV(URSEL) | (3 << UCSZ0);
+
     if(enable_stream)
 	stderr = stdout = &usart_stdout;
 
+}
+
+static char c = 0;
+
+SIGNAL(SIG_UART_RECV)
+{ // USART RX interrupt
+        c = UDR;
 }
 
 
 int usart_getchar()
 {
 
-while ( !(UCSRA & (1<<RXC)) );      // RXC: USART Recieve Complete
-       
-    return UDR; 
+    while(!c);
+    return c;
 /*
    loop_until_bit_is_set(UCSRA, RXC);
    return UDR;
