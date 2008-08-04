@@ -12,7 +12,7 @@ DUDEFLAGS=-E noreset
 ifdef KB_KEYMAP
 	KM=-DKB_KEYMAP_$(KB_KEYMAP)
 else
-	KM=-DKB_KEYMAP_QWERTY
+	KM=-DKB_KEYMAP_AZERTY
 endif
 
 CC=avr-gcc
