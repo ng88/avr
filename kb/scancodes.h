@@ -1,5 +1,5 @@
 /* 
- *  Author: Nicolas GUILLAUME <ng@ngosft-fr.com>
+ *  Author: Nicolas GUILLAUME <ng@ngsoft-fr.com>
  */  
 
 #ifndef SCANCODES_H
@@ -7,11 +7,14 @@
 
 enum
 {
-    KEY_UP           = 0xF0,
-    KEY_LEFT_SHIFT   = 0x12,
-    KEY_RIGHT_SHIFT  = 0x59,
-    KEY_F1           = 0x05,
-    KEY_F2           = 0x06,
+    KEY_UP       = 0xf0,
+    KEY_LSHIFT   = 0x12,
+    KEY_RSHIFT   = 0x59,
+    KEY_LALT     = 0x11,
+    KEY_RALT     = 0x11, /* extended */
+    KEY_LCTRL    = 0x14,
+    KEY_RCTRL    = 0x14, /* extended */
+
 };
 
 enum

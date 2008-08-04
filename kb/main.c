@@ -1,5 +1,5 @@
 /* 
- *  Author: Nicolas GUILLAUME <ng@ngosft-fr.com>
+ *  Author: Nicolas GUILLAUME <ng@ngsoft-fr.com>
  */
 
 #include <stdlib.h>

@@ -1,7 +1,7 @@
 /* Keyboard communication routines
  * Contributors:
  *   scienceprog.com
- *   Nicolas GUILLAUME <ng@ngosft-fr.com>
+ *   Nicolas GUILLAUME <ng@ngsoft-fr.com>
  */
 
 
