@@ -26,42 +26,27 @@ int main()
     usart_init(1);
     kb_init();
    
-enum
-{
-    KEY_UP       = 0xf0,
-    KEY_LSHIFT   = 0x12,
-    KEY_RSHIFT   = 0x59,
-    KEY_LALT     = 0x11,
-    KEY_RALT     = 0x11, /* extended */
-    KEY_LCTRL    = 0x14,
-    KEY_RCTRL    = 0x14, /* extended */
-
-};
     sei();
 
     dbg_printf("\n\nInitialisation...\n"); 
 
     dbg_printf("Bienvenue !\n"); 
 
-    int c;
     while(1)
     {
-       /*
-        PORTD |= _BV(PD5);
-	delay_ms(100);
-	PORTD &= ~_BV(PD5);
-	
-	delay_ms(1300);
-
-	
+      
+	/*
+	int c;
 	while( (c = kb_getscancode()) != EOB )
 	{
-	    printf("SCANCODE=%X %d\n", (char)c, (char)c == (char)KEY_UP);
+	    printf("SCANCODE=%X\n", (char)c);
 	}
 	*/
 
 	char k = kb_getchar();
-	printf("KEY = %c %d %X\n", k, k ,k);
+	//printf("KEY = %c %d %X\n", k, k ,k);
+	putchar(k);
+
 
     }
     return 0;

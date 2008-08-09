@@ -10,6 +10,7 @@ enum
     KEY_UP       = 0xf0,
     KEY_LSHIFT   = 0x12,
     KEY_RSHIFT   = 0x59,
+    KEY_CAPS     = 0x58,
     KEY_LALT     = 0x11,
     KEY_RALT     = 0x11, /* extended */
     KEY_LCTRL    = 0x14,

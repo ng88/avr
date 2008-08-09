@@ -54,29 +54,44 @@ int kb_getscancode()
 
 int kb_getchar()
 {
+    static char modifier = KM_NORMAL;
     char c = cb_readb(&buff);
 
     switch(c)
     {
-    case (char)KEY_UP: // ignore key up event
-	(void)cb_readb(&buff);
+    case (char)KEY_UP:
+	c = cb_readb(&buff);
+	if(c == (char)KEY_LSHIFT || c == (char)KEY_RSHIFT)
+	    modifier = KM_NORMAL;
 	break;
     case (char)KEY_EXTENDED_START:
 	c = cb_readb(&buff);
-	if(c == (char)KEY_UP) // ignore key up event
-	    (void)cb_readb(&buff);
+	if(c == (char)KEY_UP)
+	{
+	    if(cb_readb(&buff) == (char)KEY_RALT)
+		modifier = KM_NORMAL;
+	}
 	else
-	    return scancode_ex_to_ascii(c, KM_NORMAL);
+	{
+	    if(c == (char)KEY_RALT)
+		modifier = KM_ALTGRED;
+	    else
+		return scancode_ex_to_ascii(c, modifier);
+	}
 	break;
     case (char)KEY_PBRK_START:
-	c = cb_readb(&buff);
-	if(c == (char)KEY_UP) // ignore key up event
+	if(cb_readb(&buff) == (char)KEY_UP)
 	    (void)cb_readb(&buff);
 	(void)cb_readb(&buff);
 	(void)cb_readb(&buff);
 	break;
     default:
-	return scancode_to_ascii(c, KM_NORMAL);
+	if(c == (char)KEY_LSHIFT || c == (char)KEY_RSHIFT)
+	    modifier = KM_SHIFTED;
+	else if(c == (char)KEY_CAPS)
+	    modifier = (modifier == KM_NORMAL) ? KM_SHIFTED : KM_NORMAL;
+	else
+	    return scancode_to_ascii(c, modifier);
     }
 
     return kb_getchar();
