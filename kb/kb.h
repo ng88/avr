@@ -24,7 +24,7 @@ enum
     CMD_SET_REPEAT_RATE = 0xf3,
     CMD_KEYBOARD_ENABLE = 0xf4,
     CMD_KEYBOARD_DISABLE = 0xf5,
-    CMD_RESENT = fe,
+    CMD_RESEND = 0xfe,
 };
 
 void kb_init(void);

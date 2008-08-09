@@ -39,6 +39,7 @@ int cb_read(cbuffer_t * b)
 }
 
 
-
-end alculable
+/*
+end calculable
 read & write devrait etre des short
+*/

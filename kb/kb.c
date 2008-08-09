@@ -6,46 +6,23 @@
 #include "kb.h"
 #include "scancodes.h"
 #include <lcutil/delay.h>
+#include <lcutil/cbuffer.h>
 
-#define BUFF_SIZE 64
 
-enum
-{
-    FALLING_EDGE = 0,
-    RISING_EDGE = 1
-};
-
-enum
-{
-    MODE_ASCII = 0,
-    MODE_SCANCODE = 1,
-    MODE_ESC = 2,
-    MODE_LSC = 3
-};
-
-unsigned char kb_buffer[BUFF_SIZE];
-unsigned char *inpt, *outpt;
-unsigned char buffcnt;
-
+static cbuffer_t buff;
 
 void kb_init(void)
-{
-    inpt = kb_buffer;           // Initialize buffer
-    outpt = kb_buffer;
-    buffcnt = 0;
-
+{ 
+    cb_init(&buff);
     MCUCR = ISC0_FALLING_EDGE;
-
 }
 
 ISR(INT0_vect)
 {
 
-    static unsigned char data = 0;  // Holds the received scan code
-
+    static unsigned char data = 0; /* holds the received scancode */
     static unsigned char bitcount = 11;
-    static unsigned char edge = FALLING_EDGE;
-
+ 
     /** 11 bits:
      *  Start (0)
      *  0..7 data byte  (Least significant bit first)
@@ -53,48 +30,25 @@ ISR(INT0_vect)
      *  Stop (1)
      */
 	
-    if(bitcount > 2 && bitcount < 11)       // Bit 3 to 10 is data. Parity bit,
-    {                       // start and stop bits are ignored.
+    if(bitcount > 2 && bitcount < 11)
+    {             /* start and stop bits are ignored. */
 	data = (data >> 1);
 	if(bit_is_set(PIN_KB, DATAPIN))
 	    data = data | 0x80; // store a 1
     }
 
-    if(--bitcount == 0)     // All bits received
+    if(--bitcount == 0)  /* all bits received */
     {
 	bitcount = 11;
-	kb_decode(data);
+	//kb_decode(data);
+	cb_write(&buff, data);
+	//printf("SCANCODE=%X %x\n", data, KEY_UP);
 	data = 0;
     }
+}
 
-
-    /*if(!edge)                   // Routine entered at falling edge
-    {
-        if(bitcount > 2 && bitcount < 11)       // Bit 3 to 10 is data. Parity bit,
-        {                       // start and stop bits are ignored.
-            data = (data >> 1);
-            if(bit_is_set(PIN_KB, DATAPIN))
-                data = data | 0x80;     // Store a '1'
-        }
-
-        MCUCR = ISC0_RISING_EDGE;              // Set interrupt on rising edge
-        edge = RISING_EDGE;
-
-    }
-    else
-    {                           // Routine entered at rising edge
-
-        MCUCR = ISC0_FALLING_EDGE;              // Set interrupt on falling edge
-        edge = FALLING_EDGE;
-
-        if(--bitcount == 0)     // All bits received
-        {
-	    //printf("decode (%d)\n", data);
-            kb_decode(data);
-            bitcount = 11;
-        }
-    }
-	*/
+int kb_getchar()
+{
 }
 
 /*
@@ -174,7 +128,7 @@ void kb_decode_old(unsigned char sc)
         }
     }
 }*/
-
+/*
 void kb_decode(unsigned char sc)
 {
     static unsigned char is_up=0, shift = 0, mode = 0;
@@ -282,3 +236,4 @@ int kb_getchar()
 
     return byte;
 }
+*/

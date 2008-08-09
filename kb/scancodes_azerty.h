@@ -38,7 +38,7 @@ unsigned char kb_keymap[][KM_COUNT] =
     {0x5b, '$', '£', '?'},
     {0x5d, '*', 'µ', '`'},
 
-    {0x,5a '\n', '\n', '\n'},
+    {0x5a, '\n', '\n', '\n'},
 
     {0x1c, 'q', 'Q', '@'},
     {0x1b, 's', 'S', 'ß'},
@@ -91,8 +91,8 @@ unsigned char kb_keymap[][KM_COUNT] =
 /** extended key */
 unsigned char kb_keymap_ex[][KM_COUNT] =
 {
-    {0x4A, '/', '/', '/'},
-    {0x5a '\n', '\n', '\n'},
+    {0x4a, '/', '/', '/'},
+    {0x5a, '\n', '\n', '\n'},
     {0, 0, 0, 0} 
 };
 

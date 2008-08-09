@@ -3,7 +3,7 @@
  */
 
 #ifndef CBUFF_SIZE
-# define CBUFF_SIZE 8
+# define CBUFF_SIZE 128
 #endif
 
 #define EOB ((int)-1)
@@ -41,7 +41,7 @@ void cb_init(cbuffer_t * b)
     b->last = b->start + CBUFF_SIZE - 1;
 }
 
-/**Reset the read pointer */
+/** Reset the read pointer */
 void cb_reset_read(cbuffer_t * b)
 {
     b->read_ptr = b->write_ptr;
