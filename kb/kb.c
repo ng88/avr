@@ -51,10 +51,9 @@ int kb_getscancode()
     return cb_read(&buff);
 }
 
-
-int kb_getchar()
+int kb_decode_next_char()
 {
-    static char modifier = KM_NORMAL;
+   static char modifier = KM_NORMAL;
     char c = cb_readb(&buff);
 
     switch(c)
@@ -94,7 +93,15 @@ int kb_getchar()
 	    return scancode_to_ascii(c, modifier);
     }
 
-    return kb_getchar();
+    /* no char yet */
+    return EOB;
+}
+
+char kb_getchar()
+{
+    int c;
+    while( (c = kb_decode_next_char()) == EOB );
+    return (char)c;
 }
 
 

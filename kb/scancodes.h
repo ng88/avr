@@ -20,10 +20,10 @@ enum
 
 enum
 {
-    /* start code of a nextended key */
+    /* start code of an extended key */
     KEY_EXTENDED_START = 0xe0,
 
-    /* special case of pause break */
+    /* special case of the pause break key */
     KEY_PBRK_START = 0xe1,
 
 };

@@ -28,7 +28,7 @@ int main()
    
     sei();
 
-    dbg_printf("\n\nInitialisation...\n"); 
+    dbg_printf("Initialisation...\n"); 
 
     dbg_printf("Bienvenue !\n"); 
 
