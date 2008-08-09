@@ -21,13 +21,10 @@ enum
 {
     /* start code of a nextended key */
     KEY_EXTENDED_START = 0xe0,
-    /* an extended key require one more byte */
-    KEY_EXTENDED_LEN = 1,
 
     /* special case of pause break */
     KEY_PBRK_START = 0xe1,
-    /* pause break is E1,14,77,E1,F0,14,F0,77 */
-    KEY_PBRK_LEN = 7,
+
 };
 
 enum

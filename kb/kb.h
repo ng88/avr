@@ -38,7 +38,7 @@ void kb_put_buff(unsigned char c);
 /** Retrieve the next ASCII typed char */
 int kb_getchar();
 
-/** Retrieve the next scancode */
+/** Retrieve the next scancode or EOB */
 int kb_getscancode();
 
 

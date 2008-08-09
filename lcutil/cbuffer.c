@@ -15,8 +15,6 @@ void cb_write(cbuffer_t * b, char c)
     if(size == CBUFF_SIZE - 2) // 1 byte lost!
 	(void)cb_read(b);
 
-    printf("s=%d\n", size);
-
     if(b->write_ptr == b->last)
 	b->write_ptr = b->start;
     else
