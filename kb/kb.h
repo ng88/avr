@@ -31,10 +31,6 @@ void kb_init(void);
 
 ISR(INT0_vect);
 
-void kb_decode(unsigned char sc);
-
-void kb_put_buff(unsigned char c);
-
 /** Retrieve the next ASCII typed char */
 char kb_getchar();
 

@@ -6,7 +6,7 @@
 #define SCANCODES_AZERTY_H
 
 
-unsigned char kb_keymap[][KM_COUNT] =
+static char kb_keymap[][KM_COUNT] =
 {
     {0x0e, '²', '~', '¬'},
     {0x16, '&', '1', '¹'},
@@ -89,7 +89,7 @@ unsigned char kb_keymap[][KM_COUNT] =
 
 
 /** extended key */
-unsigned char kb_keymap_ex[][KM_COUNT] =
+static char kb_keymap_ex[][KM_COUNT] =
 {
     {0x4a, '/', '/', '/'},
     {0x5a, '\n', '\n', '\n'},

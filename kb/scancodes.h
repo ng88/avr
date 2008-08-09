@@ -53,15 +53,15 @@ enum
 #endif
 
 #if !defined(__DOXYGEN__)
-static inline unsigned char scancode_to_ascii(unsigned char __c, unsigned char __m) __attribute__((always_inline));
-static inline unsigned char scancode_ex_to_ascii(unsigned char __c, unsigned char __m) __attribute__((always_inline));
+static inline char scancode_to_ascii(char __c, unsigned char __m) __attribute__((always_inline));
+static inline char scancode_ex_to_ascii(char __c, unsigned char __m) __attribute__((always_inline));
 #endif
 
 /** Normal scancode to ascii */
-unsigned char scancode_to_ascii(unsigned char code, unsigned char modifier)
+char scancode_to_ascii(char code, unsigned char modifier)
 {
     unsigned char i = 0;
-    register unsigned char c;
+    register char c;
     while( (c = kb_keymap[i][KM_KEY]) )
     {
 	if(c == code)
@@ -73,10 +73,10 @@ unsigned char scancode_to_ascii(unsigned char code, unsigned char modifier)
 }
 
 /** Extended scancode to ascii */
-unsigned char scancode_ex_to_ascii(unsigned char code, unsigned char modifier)
+char scancode_ex_to_ascii(char code, unsigned char modifier)
 {
     unsigned char i = 0;
-    register unsigned char c;
+    register char c;
     while( (c = kb_keymap_ex[i][KM_KEY]) )
     {
 	if(c == code)

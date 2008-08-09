@@ -53,7 +53,7 @@ int kb_getscancode()
 
 int kb_decode_next_char()
 {
-   static char modifier = KM_NORMAL;
+    static unsigned char modifier = KM_NORMAL;
     char c = cb_readb(&buff);
 
     switch(c)
