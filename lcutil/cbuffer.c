@@ -7,37 +7,32 @@
 void cb_write(cbuffer_t * b, char c)
 {
     int size;
-    if(b->write_ptr >= b->read_ptr)
-	size = b->write_ptr - b->read_ptr;
+    if(b->write >= b->read)
+	size = b->write - b->read;
     else
-	size = b->last - b->read_ptr + b->write_ptr - b->start;
+	size = CBUFF_SIZE - 1 - b->read + b->write;
 
     if(size == CBUFF_SIZE - 2) // 1 byte lost!
 	(void)cb_read(b);
 
-    if(b->write_ptr == b->last)
-	b->write_ptr = b->start;
+    if(b->write == CBUFF_SIZE - 1)
+	b->write = 0;
     else
-	b->write_ptr++;
+	b->write++;
 
-    *(b->write_ptr) = c;
+    b->data[b->write] = c;
 }
 
 int cb_read(cbuffer_t * b)
 {
-    if(b->read_ptr == b->write_ptr)
+    if(b->read == b->write)
 	return EOB;
 
-    if(b->read_ptr == b->last)
-	b->read_ptr = b->start;
+    if(b->read == CBUFF_SIZE - 1)
+	b->read = 0;
     else
-	b->read_ptr++;
+	b->read++;
 
-    return *(b->read_ptr);
+    return b->data[b->read];
 }
 
-
-/*
-end calculable
-read & write devrait etre des short
-*/
