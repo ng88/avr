@@ -7,24 +7,14 @@
 #include <lcutil/delay.h>
 #include <lcutil/assert.h>
 
-#define USART_BAUD_CALC(UART_BAUD_RATE,F_OSC) ((F_OSC)/((UART_BAUD_RATE)*16l)-1)
+#define USART_BAUD_CALC(RATE, F) ((F) / ((RATE) * 16l) - 1)
 
-static FILE usart_stdout = FDEV_SETUP_STREAM(&usart_putchar, NULL, _FDEV_SETUP_WRITE);
-
-int usart_putchar(char c, FILE * stream)
-{
-    if(c == '\n')
-        usart_putchar('\r', stream);
-    loop_until_bit_is_set(UCSRA, UDRE);
-    UDR = c;
-    return 0;
-}
+static FILE usart_in_out = FDEV_SETUP_STREAM(&usart_putchar, &usart_getchar, _FDEV_SETUP_RW);
 
 void usart_init(int enable_stream)
 {
-    // Qet baud rate
-    UBRRH = (uint8_t)(USART_BAUD_CALC(USART_BAUD_RATE,F_OSC) >> 8);
-    UBRRL = (uint8_t)USART_BAUD_CALC(USART_BAUD_RATE,F_OSC);
+    UBRRH = (uint8_t)(USART_BAUD_CALC(USART_BAUD_RATE, F_OSC) >> 8);
+    UBRRL = (uint8_t)USART_BAUD_CALC(USART_BAUD_RATE, F_OSC);
 
     loop_until_bit_is_clear(UCSRA, RXC);
     loop_until_bit_is_set(UCSRA, UDRE);
@@ -36,27 +26,26 @@ void usart_init(int enable_stream)
     UCSRC = _BV(URSEL) | (3 << UCSZ0);
 
     if(enable_stream)
-	stderr = stdout = &usart_stdout;
+	stdin = stderr = stdout = &usart_in_out;
 
 }
 
-static char c = 0;
-
-SIGNAL(SIG_UART_RECV)
-{ // USART RX interrupt
-        c = UDR;
-}
-
-
-int usart_getchar()
+int usart_getchar(FILE * stream)
 {
 
-    while(!c);
-    return c;
-/*
-   loop_until_bit_is_set(UCSRA, RXC);
+    printf("AVANT\n");
+    loop_until_bit_is_set(UCSRA, RXC);
+    printf("APRES\n");
    return UDR;
-*/
 }
 
+int usart_putchar(char c, FILE * stream)
+{
+    if(c == '\n')
+        usart_putchar('\r', stream);
+ 
+   loop_until_bit_is_set(UCSRA, UDRE);
+    UDR = c;
+    return 0;
+}
 

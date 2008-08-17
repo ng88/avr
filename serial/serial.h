@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 int usart_putchar(char c, FILE * stream);
-int usart_getchar();
+int usart_getchar(FILE * stream);
 void usart_delay_ms(unsigned short ms);
 void usart_init(int enable_stream);
 

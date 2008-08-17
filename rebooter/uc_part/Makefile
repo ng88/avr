@@ -1,6 +1,7 @@
 
 # Author: Nicolas GUILLAUME <ng@ngsoft-fr.com>
 
+BAUD_RATE=9600
 FCPU=3686400
 MMCU=atmega8
 PART=m8
@@ -10,10 +11,10 @@ DUDEFLAGS=-E noreset
 
 
 CC=avr-gcc
-CFLAGS=-W -Wall -Os -Wno-unused -I. -I.. -I../.. -mmcu=$(MMCU) -DF_CPU=$(FCPU) $(KM)
+CFLAGS=-W -Wall -Os -Wno-unused -I. -I.. -I../.. -mmcu=$(MMCU) -DF_CPU=$(FCPU) -DUSART_BAUD_RATE=9600
 LDFLAGS=
 
-SRC=main.c 
+SRC=main.c ../../serial/serial.c
 OBJS=$(SRC:.c=.o)
 
 TARGET=A.hex
