@@ -33,6 +33,16 @@ static int leds_total = 0;
  */
 static int nbhit = 0;
 
+/** Son joué lors d'un contact
+ */
+#define PART_CONTACT_COUNT 1
+static unsigned short int part_contact[PART_CONTACT_COUNT][2] =
+{
+    {0, 0},
+};
+
+
+#define N_TEMPO 200.00
 
 /** Routine d'interruption déclenchée à chaque fois
  * quel le fil de fer est touché.
@@ -46,11 +56,13 @@ ISR(INT0_vect)
     cli();
     if(nbhit < LB_LED_COUNT)
     {
+	bz_play(part_contact, PART_CONTACT_COUNT, N_TEMPO);
 	for(k = 0; k <= 5; k++)
 	{
 	    LB_PORT |= _BV(leds[nbhit]);
 	    _delay_ms(LB_LED_DELAY);
 	    LB_PORT &= ~_BV(leds[nbhit]); 
+	    _delay_ms(LB_LED_DELAY);
 	}
 	LB_PORT |= leds[nbhit];
 	nbhit++;
@@ -58,18 +70,20 @@ ISR(INT0_vect)
 
     if(nbhit == LB_LED_COUNT)
     {
-	/* Partie finie */
-	for(k = 0; k <= 5; k++)
+	/* Partie finie, clignotement infini */
+	while(1)
 	{
 	    PORTC &= ~leds_total;
 	    _delay_ms(LB_LED_DELAY);
 	    LB_PORT |= leds_total;
+	    _delay_ms(LB_LED_DELAY);
 	}
     }
     sei();
 }
 
-int main(void)
+
+int main()
 {
     int i, k;
 
@@ -105,24 +119,8 @@ int main(void)
     }
 
     sei();
+
     while(1);
-
-    /*while(1)
-    {
-
-	for(i = 0; i < P_COUNT; i++)
-	{
-	    PORTC |= _BV(PC0);  
-	    mbeep((double)part[i][0], (double)part[i][1] * N_TEMPO);
-	    PORTC &= ~_BV(PC0);
-	    PORTC |= _BV(PC1);
-
-	    _delay_ms(N_TEMPO / 5.0);
-	    PORTC &= ~_BV(PC1);
-	}
-
-	_delay_ms(1000);
-	}*/
 
     return 0;
 

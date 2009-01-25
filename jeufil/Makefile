@@ -9,7 +9,7 @@ DUDEFLAGS=
 
 all: A.hex
 
-A.hex: main.c
+A.hex: main.c local_pin_config.h
 	avr-gcc -W -Wall  -Os  -mmcu=$(MMCU) main.c -I.. ../buzzer/buzzer.c  -DF_CPU=$(FCPU)
 	avr-objcopy -O ihex -R .eeprom a.out A.hex
 	rm a.out

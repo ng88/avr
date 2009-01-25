@@ -16,6 +16,7 @@
 #define N_LA_3 440
 #define N_LAD_3 466
 #define N_SI_3 494
+#define N_PAUSE 0
 
 #define N_BLANCHE 4
 #define N_NOIRE   2

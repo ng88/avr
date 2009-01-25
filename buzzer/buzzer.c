@@ -29,7 +29,11 @@ void bz_play(unsigned short int ** part, int size, double  tempo)
     int i;
     for(i = 0; i < size; i++)
     {
-	bz_beep((double)part[i][0], (double)part[i][1] * tempo);
+	if(part[i][0] == N_PAUSE)
+	    _delay_ms((double)part[i][1] * tempo);
+	else
+	    bz_beep((double)part[i][0], (double)part[i][1] * tempo);
+
 	_delay_ms(tempo / 5.0);
     }
 }
