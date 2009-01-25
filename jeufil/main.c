@@ -3,6 +3,7 @@
 #include <avr/io.h>
 #include <avr/pgmspace.h>
 #include <avr/interrupt.h>
+#include <buzzer/buzzer.h>
 
 #include "local_pin_config.h"
 

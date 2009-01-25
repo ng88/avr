@@ -10,7 +10,7 @@ DUDEFLAGS=
 all: compile
 
 compile:
-	avr-gcc -W -Wall  -Os  -mmcu=$(MMCU) buzzer*.c   -DF_CPU=$(FCPU)
+	avr-gcc -W -Wall  -Os  -mmcu=$(MMCU) buzzer_test.c -I.. ../buzzer/buzzer.c  -DF_CPU=$(FCPU)
 	avr-objcopy -O ihex -R .eeprom a.out A.hex
 	rm a.out
 

@@ -4,7 +4,7 @@
 #include <avr/pgmspace.h>
 
 #include "local_pin_config.h"
-#include <buzzer.h>
+#include <buzzer/buzzer.h>
 
 
 void bz_beep(double freq, double len_ms)
