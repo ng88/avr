@@ -1,4 +1,50 @@
+Quartz extérieur:
+
 dump hfuse
 0000  d9
 dump lfuse
 0000  ff
+
+Oscillateur interne 1MHz:
+
+dump hfuse
+0000  d9
+dump lfuse
+0000  e1
+
+Oscillateur interne 8MHz:
+
+dump hfuse
+0000  d9
+dump lfuse
+0000  e4
+
+
+c.f.: http://www.engbedded.com/cgi-bin/fc.cgi
+
+
+Fuse Low Byte
+=============
+Bit #	Name		Description				Default
+7 	BODLEVEL 	Brown out detector trigger level 	1 (unprogrammed)
+6 	BODEN 		Brown out detector enable 		1 (unprogrammed, no BOD)
+5 	SUT1 		Select start-up time 			1 (unprogrammed)
+4 	SUT0 		Select start-up time 			0 (programmed)
+3 	CKSEL3 		Select Clock source 			0 (programmed)
+2 	CKSEL2 		Select Clock source 			0 (programmed)
+1 	CKSEL1 		Select Clock source 			0 (programmed)
+0 	CKSEL0 		Select Clock source 			1 (unprogrammed)
+
+ 
+Fuse High Byte
+==============
+Bit #	Name		Description					Default
+7 	RSTDISBL 	Select if PC6 is I/O pin or RESET pin		1 (unprogrammed PC6 is RESET-pin)
+6 	WDTON 		WDT always on 	     	    	  	  	1 (unprogrammed, WDT enabled by WDTCR)
+5 	SPIEN 		Enable Serial Program and Data Downloading 	0 (programmed, SPI programming enabled)
+4 	CKOPT 		Oscillator options 	       			1 (unprogrammed)
+3 	EESAVE 		EEPROM memory is kept through the Chip Erase 	1 (unprogrammed, EEPROM not preserved)
+2 	BOOTSZ1 	Select Boot Size 	      	       		0 (programmed)
+1 	BOOTSZ0 	Select Boot Size				0 (programmed)
+0 	BOOTRST 	Select Reset Vector 				1 (unprogrammed)
+
