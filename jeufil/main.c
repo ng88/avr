@@ -17,12 +17,19 @@
  *
  *  @author: Nicolas GUILLAUME <nicolas@guillaume-fr.net> 2008 - 2009
  *
+ *
+ *  Configuration par défaut (cf local_pin_config.h) :
+ *
+ *  Leds : PORTC PC0, PC1, PC2, PC3, PC4
+ *  Buzzer : PORTD PD4
+ *  Fil de fer : PORTD PD2
+ *
  */
 
 /** Nombre de leds d'affichage
  */
 #define LB_LED_COUNT 3
-#define LB_LED_DELAY 70
+#define LB_LED_DELAY 150
 
 /** Leds allumées lors d'un contact
  */
@@ -35,10 +42,14 @@ static int nbhit = 0;
 
 /** Son joué lors d'un contact
  */
-#define PART_CONTACT_COUNT 1
-static unsigned short int part_contact[PART_CONTACT_COUNT][2] =
+#define PART_CONTACT_COUNT 2
+static  note_t note_contact[PART_CONTACT_COUNT] =
 {
-    {0, 0},
+    N_LA_3, N_DO_3,
+};
+static note_len_t note_len_contact[PART_CONTACT_COUNT] =
+{
+    N_BLANCHE, N_BLANCHE,
 };
 
 
@@ -54,9 +65,9 @@ ISR(INT0_vect)
      * temps apres un hit.
      */
     cli();
-    if(nbhit < LB_LED_COUNT)
+    if(nbhit <= LB_LED_COUNT)
     {
-	bz_play(part_contact, PART_CONTACT_COUNT, N_TEMPO);
+	bz_play(note_contact, note_len_contact, PART_CONTACT_COUNT, N_TEMPO);
 	for(k = 0; k <= 5; k++)
 	{
 	    LB_PORT |= _BV(leds[nbhit]);
@@ -64,7 +75,7 @@ ISR(INT0_vect)
 	    LB_PORT &= ~_BV(leds[nbhit]); 
 	    _delay_ms(LB_LED_DELAY);
 	}
-	LB_PORT |= leds[nbhit];
+	LB_PORT |= _BV(leds[nbhit]);
 	nbhit++;
     }
 
@@ -94,10 +105,11 @@ int main()
     for(i = 0; i < LB_LED_COUNT; i++)
 	leds_total |= _BV(leds[i]);
 
-    LB_DDR = _BV(BZ_PIN) | leds_total;
+    LB_DDR |= leds_total;
+    BZ_DDR |= _BV(BZ_PIN);
 
-    MCUCR = ISC0_RISING_EDGE;
-    GIMSK = _BV(INT0);
+    MCUCR |= ISC0_FALLING_EDGE;
+    GIMSK |= _BV(INT0);
 
     /* Bienvenue !
      */
@@ -109,8 +121,8 @@ int main()
 	    _delay_ms(LB_LED_DELAY);
 	    PORTC &= ~_BV(leds[i]);
 	}
-
-	for(i = LB_LED_DELAY - 2; i >= 0; i--)
+	
+	for(i = LB_LED_COUNT - 2; i >= 0; i--)
 	{
 	    LB_PORT |= _BV(leds[i]);
 	    _delay_ms(LB_LED_DELAY);
@@ -125,3 +137,4 @@ int main()
     return 0;
 
 }
+

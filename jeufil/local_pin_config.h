@@ -9,7 +9,8 @@
 /** Pin du buzzer
  */
 #define BZ_PORT PORTC
-#define BZ_PIN PC4
+#define BZ_DDR  DDRC
+#define BZ_PIN  PC5
 
 
 #endif

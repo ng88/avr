@@ -23,13 +23,16 @@
 #define N_RONDE   8
 #define N_CROCHE  1
 
+typedef unsigned short int note_t;
+typedef unsigned char note_len_t;
+
 
 /** Emit a beep at freq during len_ms ms
  */
 void bz_beep(double freq, double len_ms);
 
-/** Play music stored in part
+/** Play music stored in notes & lens
  */
-void bz_play(unsigned short int ** part, int size, double  tempo);
+void bz_play(note_t * notes, note_len_t * lens, int size, double  tempo);
 
 #endif

@@ -24,15 +24,15 @@ void bz_beep(double freq, double len_ms)
     }
 }
 
-void bz_play(unsigned short int ** part, int size, double  tempo)
+void bz_play(note_t * notes, note_len_t * lens, int size, double  tempo)
 {
     int i;
     for(i = 0; i < size; i++)
     {
-	if(part[i][0] == N_PAUSE)
-	    _delay_ms((double)part[i][1] * tempo);
+	if(notes[i] == N_PAUSE)
+	    _delay_ms((double)lens[i] * tempo);
 	else
-	    bz_beep((double)part[i][0], (double)part[i][1] * tempo);
+	    bz_beep((double)notes[i], (double)lens[i] * tempo);
 
 	_delay_ms(tempo / 5.0);
     }

@@ -11,68 +11,134 @@
 
 #define P_COUNT 44
 
-static unsigned short int part_acdll[P_COUNT][2] = 
+static note_t note_acdll[P_COUNT] = 
 {
-    {N_DO_3/2, N_CROCHE},
-    {N_DO_3/2, N_CROCHE},
-    {N_DO_3/2, N_CROCHE},
-    {N_RE_3, N_CROCHE},
+    N_DO_3/2,
+    N_DO_3/2,
+    N_DO_3/2,
+    N_RE_3,
 
-    {N_MI_3, N_NOIRE},
-    {N_RE_3, N_NOIRE},
+    N_MI_3,
+    N_RE_3,
 
-    {N_DO_3/2, N_CROCHE},
-    {N_MI_3, N_CROCHE},
-    {N_RE_3, N_CROCHE},
-    {N_RE_3, N_CROCHE},
+    N_DO_3/2,
+    N_MI_3,
+    N_RE_3,
+    N_RE_3,
 
-    {N_DO_3/2, N_BLANCHE},
+    N_DO_3/2,
 
-    {N_DO_3/2, N_CROCHE},
-    {N_DO_3/2, N_CROCHE},
-    {N_DO_3/2, N_CROCHE},
-    {N_RE_3, N_CROCHE},
+    N_DO_3/2,
+    N_DO_3/2,
+    N_DO_3/2,
+    N_RE_3,
 
-    {N_MI_3, N_NOIRE},
-    {N_RE_3, N_NOIRE},
+    N_MI_3,
+    N_RE_3,
 
-    {N_DO_3/2, N_CROCHE},
-    {N_MI_3, N_CROCHE},
-    {N_RE_3, N_CROCHE},
-    {N_RE_3, N_CROCHE},
+    N_DO_3/2,
+    N_MI_3,
+    N_RE_3,
+    N_RE_3,
 
-    {N_DO_3/2.0, N_BLANCHE},
+    N_DO_3/2.0,
 
-    {N_RE_3, N_CROCHE},
-    {N_RE_3, N_CROCHE},
-    {N_RE_3, N_CROCHE},
-    {N_RE_3, N_CROCHE},
+    N_RE_3,
+    N_RE_3,
+    N_RE_3,
+    N_RE_3,
 
-    {N_LA_3/2, N_NOIRE},
-    {N_LA_3/2, N_NOIRE},
+    N_LA_3/2,
+    N_LA_3/2,
 
-    {N_RE_3, N_CROCHE},
-    {N_DO_3/2, N_CROCHE},
-    {N_LA_3/2, N_CROCHE},
-    {N_SI_3/2, N_CROCHE},
+    N_RE_3,
+    N_DO_3/2,
+    N_LA_3/2,
+    N_SI_3/2,
 
-    {N_SOL_3/2, N_BLANCHE},
+    N_SOL_3/2,
 
-    {N_DO_3/2, N_CROCHE},
-    {N_DO_3/2, N_CROCHE},
-    {N_DO_3/2, N_CROCHE},
-    {N_RE_3, N_CROCHE},
+    N_DO_3/2,
+    N_DO_3/2,
+    N_DO_3/2,
+    N_RE_3,
 
-    {N_MI_3, N_NOIRE},
-    {N_RE_3, N_NOIRE},
+    N_MI_3,
+    N_RE_3,
 
-    {N_DO_3/2, N_CROCHE},
-    {N_MI_3, N_CROCHE},
-    {N_RE_3, N_CROCHE},
-    {N_RE_3, N_CROCHE},
+    N_DO_3/2,
+    N_MI_3,
+    N_RE_3,
+    N_RE_3,
 
-    {N_DO_3/2, N_BLANCHE},
+    N_DO_3/2,
 };
+static note_len_t len_acdll[P_COUNT] = 
+{
+    N_CROCHE,
+    N_CROCHE,
+    N_CROCHE,
+    N_CROCHE,
+
+    N_NOIRE,
+    N_NOIRE,
+
+    N_CROCHE,
+    N_CROCHE,
+    N_CROCHE,
+    N_CROCHE,
+
+    N_BLANCHE,
+
+    N_CROCHE,
+    N_CROCHE,
+    N_CROCHE,
+    N_CROCHE,
+
+    N_NOIRE,
+    N_NOIRE,
+
+    N_CROCHE,
+    N_CROCHE,
+    N_CROCHE,
+    N_CROCHE,
+
+    N_BLANCHE,
+
+    N_CROCHE,
+    N_CROCHE,
+    N_CROCHE,
+    N_CROCHE,
+
+    N_NOIRE,
+    N_NOIRE,
+
+    N_CROCHE,
+    N_CROCHE,
+    N_CROCHE,
+    N_CROCHE,
+
+    N_BLANCHE,
+
+    N_CROCHE,
+    N_CROCHE,
+    N_CROCHE,
+    N_CROCHE,
+
+    N_NOIRE,
+    N_NOIRE,
+
+    N_CROCHE,
+    N_CROCHE,
+    N_CROCHE,
+    N_CROCHE,
+
+    N_BLANCHE,
+};
+
+
+
+
 
 int main(void)
 {
@@ -80,8 +146,7 @@ int main(void)
 
     while(1)
     {
-	bz_play(part_acdll, P_COUNT, N_TEMPO);
-
+	bz_play(note_acdll, len_acdll, P_COUNT, N_TEMPO);
 	_delay_ms(1000);
     }
 
