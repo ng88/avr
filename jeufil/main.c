@@ -108,8 +108,14 @@ int main()
     LB_DDR |= leds_total;
     BZ_DDR |= _BV(BZ_PIN);
 
-    MCUCR |= ISC0_FALLING_EDGE;
+    /*MCUCR |= ISC0_FALLING_EDGE;
     GIMSK |= _BV(INT0);
+GICR|=0xE0;
+MCUCR=0x0A;
+MCUCSR=0x00;
+GIFR=0xE0; */
+  MCUCR |=0x0f; // front montant
+  GICR  = 0x80; // INT1 enable
 
     /* Bienvenue !
      */
