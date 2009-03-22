@@ -1,89 +1,47 @@
-###############################################################################
-# Makefile for the project SD_Card
-# by CC Dharmani, Chennai (India)
-# www.dharmanitech.com
-###############################################################################
 
-## General Flags
-PROJECT = SD_Card
-MCU = atmega8
-TARGET = SD_Card.elf
-CC = avr-gcc
+# Author: Nicolas GUILLAUME <ng@ngsoft-fr.com>
 
-## Options common to compile, link and assembly rules
-COMMON = -mmcu=$(MCU)
+FCPU=8000000UL
+MMCU=atmega8
+PART=m8
+PROGRAMMER=avr911
+PORT=/dev/ttyUSB0
+DUDEFLAGS=-E noreset
 
-## Compile options common for all C compilation units.
-CFLAGS = $(COMMON)
-CFLAGS += -Wall -gdwarf-2 -std=gnu99         -DF_CPU=8000000UL -Os -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
-CFLAGS += -MD -MP -MT $(*F).o -MF dep/$(@F).d
+OPT=-DFAT_TESTING_ONLY
 
-## Assembly specific flags
-ASMFLAGS = $(COMMON)
-ASMFLAGS += $(CFLAGS)
-ASMFLAGS += -x assembler-with-cpp -Wa,-gdwarf2
+CC=avr-gcc
+CFLAGS=-W -Wall -Os -Wno-unused -I. -I.. -mmcu=$(MMCU) -DF_CPU=$(FCPU) $(OPT)
+LDFLAGS=
 
-## Linker flags
-LDFLAGS = $(COMMON)
-LDFLAGS +=  -Wl,-Map=SD_Card.map
+SRC=$(wildcard *.c)
+OBJS=$(SRC:.c=.o)
 
+TARGET=A.hex
 
-## Intel Hex file production flags
-HEX_FLASH_FLAGS = -R .eeprom
+all: $(TARGET)
 
-HEX_EEPROM_FLAGS = -j .eeprom
-HEX_EEPROM_FLAGS += --set-section-flags=.eeprom="alloc,load"
-HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
+FAT32.o: FAT32.c
+SD_main.o: SD_main.c
+SD_routines.o: SD_routines.c
+SPI_routines.o: SPI_routines.c
+UART_routines.o: UART_routines.c
 
 
-## Objects that must be built in order to link
-OBJECTS = FAT32.o SD_main.o SD_routines.o SPI_routines.o UART_routines.o
+$(TARGET): a.out
+	avr-objcopy -O ihex -R .eeprom a.out A.hex
 
-## Objects explicitly added by the user
-LINKONLYOBJECTS =
+a.out: $(OBJS)
+	$(CC) $(OBJS) $(CFLAGS) -o a.out
 
-## Build
-all: $(TARGET) SD_Card.hex SD_Card.eep SD_Card.lss size
+.PHONY: clean flash
 
-## Compile
-FAT32.o: ../FAT32.c
-    $(CC) $(INCLUDES) $(CFLAGS) -c  $<
-
-SD_main.o: ../SD_main.c
-    $(CC) $(INCLUDES) $(CFLAGS) -c  $<
-
-SD_routines.o: ../SD_routines.c
-    $(CC) $(INCLUDES) $(CFLAGS) -c  $<
-
-SPI_routines.o: ../SPI_routines.c
-    $(CC) $(INCLUDES) $(CFLAGS) -c  $<
-
-UART_routines.o: ../UART_routines.c
-    $(CC) $(INCLUDES) $(CFLAGS) -c  $<
-
-##Link
-$(TARGET): $(OBJECTS)
-     $(CC) $(LDFLAGS) $(OBJECTS) $(LINKONLYOBJECTS) $(LIBDIRS) $(LIBS) -o $(TARGET)
-
-%.hex: $(TARGET)
-    avr-objcopy -O ihex $(HEX_FLASH_FLAGS)  $< $@
-
-%.eep: $(TARGET)
-    -avr-objcopy $(HEX_EEPROM_FLAGS) -O ihex $< $@ || exit 0
-
-%.lss: $(TARGET)
-    avr-objdump -h -S $< > $@
-
-size: ${TARGET}
-    @echo
-    @avr-size -C --mcu=${MCU} ${TARGET}
-
-## Clean target
-.PHONY: clean
 clean:
-    -rm -rf $(OBJECTS) SD_Card.elf dep/* SD_Card.hex SD_Card.eep SD_Card.lss SD_Card.map
+	@rm -f $(OBJS)  *~ core *.core core.* *.tmp a.out
 
+%.o: %.c
+	$(CC) -o $@ -c $< $(CFLAGS)
 
-## Other dependencies
--include $(shell mkdir dep 2>/dev/null) $(wildcard dep/*)
- 
+flash: $(TARGET)
+	avrdude -c $(PROGRAMMER) -p $(PART) -P $(PORT)  -V -U flash:w:$(TARGET) $(DUDEFLAGS)
+

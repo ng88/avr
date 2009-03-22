@@ -19,7 +19,6 @@
 #ifndef _SD_ROUTINES_H_
 #define _SD_ROUTINES_H_
 
-#define FAT_TESTING_ONLY
 
 #define SD_CS_ASSERT     PORTB &= ~0x02
 #define SD_CS_DEASSERT   PORTB |= 0x02
