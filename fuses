@@ -17,10 +17,13 @@ Oscillateur interne 8MHz:
 dump hfuse
 0000  d9
 dump lfuse
-0000  e4
+0000  e4 ou c4
 
 
 c.f.: http://www.engbedded.com/cgi-bin/fc.cgi
+
+write lfuse 0 0xe4
+Il faut utiliser avr910 et pas avr911
 
 
 Fuse Low Byte

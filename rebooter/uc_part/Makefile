@@ -5,13 +5,13 @@ BAUD_RATE=9600
 FCPU=3686400
 MMCU=atmega8
 PART=m8
-PROGRAMMER=sp12
-PORT=/dev/parport0
+PROGRAMMER=avr911
+PORT=/dev/ttyUSB0
 DUDEFLAGS=-E noreset
 
 
 CC=avr-gcc
-CFLAGS=-W -Wall -Os -Wno-unused -I. -I.. -I../.. -mmcu=$(MMCU) -DF_CPU=$(FCPU) -DUSART_BAUD_RATE=9600
+CFLAGS=-W -Wall -Os -Wno-unused -I. -I.. -I../.. -mmcu=$(MMCU) -DF_CPU=$(FCPU) -DUSART_BAUD_RATE=$(BAUD_RATE)
 LDFLAGS=
 
 SRC=main.c ../../serial/serial.c

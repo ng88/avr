@@ -11,10 +11,18 @@
 
 int main()
 {
-	usart_init(1);
-	putc('\n', stdout);
-	puts("Hello World!");
-	return 0;
+    _delay_ms(100);
+    usart_init(1);
+    putc('\n', stdout);
+    puts("Test starts!\n");
+    char c;    
+    while( (c = getchar() ))
+    {
+	putchar(c);
+    }
+    puts("Test ends.\n");
+    while(1);
+    return 0;
 }
 
 

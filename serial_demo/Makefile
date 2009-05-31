@@ -1,22 +1,16 @@
 
 # Author: Nicolas GUILLAUME <ng@ngsoft-fr.com>
 
-FCPU=3686400
+FCPU=8000000
+#3686400
 MMCU=atmega8
 PART=m8
-PROGRAMMER=sp12
-PORT=/dev/parport0
+PROGRAMMER=avr911
+PORT=/dev/ttyUSB0
 DUDEFLAGS=-E noreset
 
-
-ifdef KB_KEYMAP
-	KM=-DKB_KEYMAP_$(KB_KEYMAP)
-else
-	KM=-DKB_KEYMAP_QWERTY
-endif
-
 CC=avr-gcc
-CFLAGS=-W -Wall -Os -Wno-unused -I. -I.. -mmcu=$(MMCU) -DF_CPU=$(FCPU) $(KM)
+CFLAGS=-W -Wall -Os -Wno-unused -I. -I.. -mmcu=$(MMCU) -DF_CPU=$(FCPU)
 LDFLAGS=
 
 SRC=main.c ../serial/serial.c

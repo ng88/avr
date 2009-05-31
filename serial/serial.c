@@ -7,23 +7,27 @@
 #include <lcutil/delay.h>
 #include <lcutil/assert.h>
 
-#define USART_BAUD_CALC(RATE, F) ((F) / ((RATE) * 16l) - 1)
+#define USART_BAUD_CALC(RATE, F) ((F) / ((RATE) * 16UL) - 1)
 
 static FILE usart_in_out = FDEV_SETUP_STREAM(&usart_putchar, &usart_getchar, _FDEV_SETUP_RW);
 
 void usart_init(int enable_stream)
 {
-    UBRRH = (uint8_t)(USART_BAUD_CALC(USART_BAUD_RATE, F_OSC) >> 8);
-    UBRRL = (uint8_t)USART_BAUD_CALC(USART_BAUD_RATE, F_OSC);
-
+/*    
     loop_until_bit_is_clear(UCSRA, RXC);
     loop_until_bit_is_set(UCSRA, UDRE);
     
     // Enable receiver and transmitter; enable RX interrupt
-    UCSRB = _BV(RXEN) | _BV(TXEN) | _BV(RXCIE);
+    UCSRB = _BV(RXEN) | _BV(TXEN) ;//| _BV(RXCIE);
  
     // Asynchronous 8N1
     UCSRC = _BV(URSEL) | (3 << UCSZ0);
+*/
+    UCSRB |= (1 << RXEN) | (1 << TXEN);   // Turn on the transmission and reception circuitry
+    UCSRC |= (1 << URSEL) | (1 << UCSZ0) | (1 << UCSZ1); // Use 8-bit character sizes
+
+    UBRRL = USART_BAUD_CALC(USART_BAUD_RATE, F_OSC);
+    UBRRH = (USART_BAUD_CALC(USART_BAUD_RATE, F_OSC) >> 8);
 
     if(enable_stream)
 	stdin = stderr = stdout = &usart_in_out;
@@ -32,11 +36,11 @@ void usart_init(int enable_stream)
 
 int usart_getchar(FILE * stream)
 {
+    while((UCSRA & (1 << RXC)) == 0);
+    //loop_until_bit_is_set(UCSRA, RXC);
 
-    printf("AVANT\n");
-    loop_until_bit_is_set(UCSRA, RXC);
-    printf("APRES\n");
-   return UDR;
+
+    return UDR;
 }
 
 int usart_putchar(char c, FILE * stream)
@@ -44,7 +48,9 @@ int usart_putchar(char c, FILE * stream)
     if(c == '\n')
         usart_putchar('\r', stream);
  
-   loop_until_bit_is_set(UCSRA, UDRE);
+    //loop_until_bit_is_set(UCSRA, UDRE);
+    while ((UCSRA & (1 << UDRE)) == 0);
+
     UDR = c;
     return 0;
 }
