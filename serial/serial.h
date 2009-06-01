@@ -11,7 +11,11 @@
 
 #include <stdio.h>
 
+/** put binary data byte b */
+void usart_putbyte(char b);
+/** put ascii data char c */
 int usart_putchar(char c, FILE * stream);
+/** get binary/ascii data */
 int usart_getchar(FILE * stream);
 void usart_delay_ms(unsigned short ms);
 void usart_init(int enable_stream);

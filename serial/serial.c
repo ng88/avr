@@ -49,9 +49,14 @@ int usart_putchar(char c, FILE * stream)
         usart_putchar('\r', stream);
  
     //loop_until_bit_is_set(UCSRA, UDRE);
-    while ((UCSRA & (1 << UDRE)) == 0);
+    while((UCSRA & (1 << UDRE)) == 0);
 
     UDR = c;
     return 0;
 }
 
+void usart_putbyte(char b)
+{
+    while((UCSRA & (1 << UDRE)) == 0);
+    UDR = b;
+}
