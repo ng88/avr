@@ -1,10 +1,10 @@
 
 # Author: Nicolas GUILLAUME <ng@ngsoft-fr.com>
 
-BAUD_RATE=9600
-FCPU=3686400
-#BAUD_RATE=2400
-#FCPU=1000000
+#BAUD_RATE=9600
+#FCPU=3686400
+BAUD_RATE=2400
+FCPU=1000000
 MMCU=atmega8
 PART=m8
 PROGRAMMER=avr911
@@ -13,7 +13,7 @@ DUDEFLAGS=-E noreset
 
 
 CC=avr-gcc
-CFLAGS=-W -Wall -Os -Wno-unused -I. -I.. -I../.. -mmcu=$(MMCU) -DF_CPU=$(FCPU) -DUSART_BAUD_RATE=$(BAUD_RATE)
+CFLAGS=-W -Wall -Os -Wno-unused -I. -I.. -I../.. -mmcu=$(MMCU) -DF_CPU=$(FCPU) -DUSART_BAUD_RATE=$(BAUD_RATE) -DSERIAL_FGETS=1
 LDFLAGS=
 
 SRC=main.c ../../serial/serial.c

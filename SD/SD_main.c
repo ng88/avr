@@ -47,7 +47,7 @@ void uart0_init(void)
     UCSRB = 0x00; //disable while setting baud rate
     UCSRA = 0x00;
     UCSRC = (1 << URSEL) | 0x06;
-    UBRRL = 0x19; //set baud rate lo
+    UBRRL = 0x0B; //set baud rate lo 19,2k sur 3,6 MHz
     UBRRH = 0x00; //set baud rate hi
     UCSRB = 0x18;
 }

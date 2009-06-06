@@ -1,7 +1,8 @@
 
 # Author: Nicolas GUILLAUME <ng@ngsoft-fr.com>
 
-FCPU=8000000UL
+#FCPU=8000000UL
+FCPU=3686400
 MMCU=atmega8
 PART=m8
 PROGRAMMER=avr911

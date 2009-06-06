@@ -60,3 +60,26 @@ void usart_putbyte(char b)
     while((UCSRA & (1 << UDRE)) == 0);
     UDR = b;
 }
+
+
+#ifdef SERIAL_FGETS
+char * usart_fgets(char *str, int size)
+{
+        char *cp;
+        int c;
+
+        if (size <= 0)
+                return NULL;
+
+        size--;
+        for (c = 0, cp = str; !(c == '\r' || c == '\n') && size > 0; size--, cp++)
+	{
+	    if ((c = usart_getchar(0)) == EOF)
+		return NULL;
+	    *cp = (char)c;
+        }
+        *cp = '\0';
+
+        return str;
+}
+#endif

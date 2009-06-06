@@ -12,20 +12,22 @@
 /** Declaration des relais
  */
 
-#define RELAY_COUNT 5
+#define RELAY_COUNT 6
+#define LED_PIN PD7
 
 static unsigned char relay_pin[RELAY_COUNT] = 
                  {
-		     PD3, PD4, PD5, PD6, PD7
+		     PD2, PD3, PD4, PD5, PD6, PD7
 		 };
 
 static char * relay_desc[RELAY_COUNT] = 
                  {
-		     "not connected",
+		     "NC",
+		     "NC",
+		     "NC",
+		     "NC",
 		     "24VDC / 120VAC",
-		     "GREEN LED",
-		     "ORANGE LED",
-		     "RED LED",
+		     "LED",
 		 };
 
 static unsigned int reset_delay = 300;
@@ -36,8 +38,6 @@ void parse_cmd();
 void help();
 void version();
 void rerror(int i);
-char * mfgets(char *str, int size, FILE *stream);
-
 
 int main()
 {
@@ -51,6 +51,14 @@ int main()
 	DDRD |= _BV(relay_pin[i]);
    
     _delay_ms(10);
+
+    for(i = 1; i <= 5; i++)
+    {
+	PORTD |= _BV(LED_PIN);
+	_delay_ms(50);
+	PORTD &= ~_BV(LED_PIN);
+	_delay_ms(100);
+    }
 
     puts("\n\n==== REBOOTER v1 ====\n");
  
@@ -75,7 +83,7 @@ void parse_cmd()
     char ok = 0;
     char line[LS];
 
-    if(!mfgets(line, LS, stdin))
+    if(!usart_fgets(line, LS))
 	return;
 
     if(!line[0] || IS_EOL(line[0]))
@@ -180,25 +188,3 @@ void rerror(int i)
     printf("invalid argument `%d'\n", i);
 }
 
-char * mfgets(char *str, int size, FILE *stream)
-{
-        char *cp;
-        int c;
-
-        if ((stream->flags & __SRD) == 0 || size <= 0)
-                return NULL;
-
-        size--;
-        for (c = 0, cp = str; !IS_EOL(c) && size > 0; size--, cp++)
-	{
-                if ((c = getc(stream)) == EOF)
-		{
-                        stream->flags |= __SERR;
-                        return NULL;
-                }
-                *cp = (char)c;
-        }
-        *cp = '\0';
-
-        return str;
-}
