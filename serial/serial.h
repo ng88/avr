@@ -6,6 +6,7 @@
 #endif
 
 #ifndef USART_BAUD_RATE
+# warning "default baudrade used (38400)"
 # define USART_BAUD_RATE 38400
 #endif
 

@@ -19,20 +19,18 @@
 # define PP_COL_COUNT 3
 #endif
 
-#ifndef PP_POLLING_INT
-# define PP_POLLING_INT 1
+/** key repetition enabled by default */
+#ifndef PP_REPET_ENABLED
+# define PP_REPET_ENABLED 1
+#endif
+
+/** minimum delay for repetition */
+#ifndef PP_REPET_DELAY
+# define PP_REPET_DELAY 100
 #endif
 
 
-#ifndef PP_DEBOUNCING_DELAY
-# define PP_DEBOUNCING_DELAY 20
-#endif
-
-#if PP_ROW_COUNT != 4 || PP_COL_COUNT != 3
-# error "only 3x4 keyboards are supported"
-#endif
-
-typedef void (*fn_key_changed_t)(int keycode);
+typedef void (*fn_key_changed_t)(unsigned char keycode);
 
 
 void pinpad_init();
@@ -41,5 +39,6 @@ void pinpad_start_active_loop(fn_key_changed_t cbkeychanged);
 
 void pinpad_stop_active_loop();
 
+char pinpad_keycode2char(unsigned char keycode);
 
 #endif

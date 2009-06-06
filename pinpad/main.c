@@ -9,6 +9,10 @@
 
 #include <serial/serial.h>
 
+void key_pressed(unsigned char keycode)
+{
+    printf(" %d => %c\n", keycode, pinpad_keycode2char(keycode));
+}
 
 int main()
 {
@@ -23,7 +27,7 @@ int main()
     pinpad_init();
     puts("PINPAD INIT OK");
 
-    pinpad_start_active_loop(0);
+    pinpad_start_active_loop(&key_pressed);
 
     while(1);
 

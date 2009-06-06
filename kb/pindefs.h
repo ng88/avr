@@ -2,8 +2,8 @@
  *  Author: Nicolas GUILLAUME <ng@ngsoft-fr.com>
  */
 
-#ifndef PINDEF_H
-#define PINDEF_H
+#ifndef PINDEFS_H
+#define PINDEFS_H
 
 #define PIN_KB  PIND
 #define PORT_KB PORTD
