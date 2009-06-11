@@ -1,3 +1,8 @@
+#ifndef CBUFFER_H
+#define CBUFFER_H
+
+#include <avr/pgmspace.h>
+
 /*  Circular buffer
  *  Author:  Nicolas GUILLAUME <ng@ngsoft-fr.com>
  */
@@ -9,23 +14,26 @@
 # define CBUFF_SIZE 192
 #endif
 
-typedef unsigned char cb_offset_t;
+#ifndef CBUFF_TYPE
+# define CBUFF_TYPE uint8_t
+#endif
 
-
+typedef CBUFF_TYPE cb_offset_t;
 
 #define EOB ((int)-1)
 
 typedef struct
 {
-    char data[CBUFF_SIZE];
-    cb_offset_t read;
-    cb_offset_t write;
+    volatile char data[CBUFF_SIZE];
+    volatile cb_offset_t read;
+    volatile cb_offset_t write;
 } cbuffer_t;
 
 
 
 
-void cb_write(cbuffer_t * b, char c);
+/* return non-zero on success and 0 if buffer is full */
+char cb_write(cbuffer_t * b, char c);
 
 /** Read a char from b, if no char is available,
  * return EOB.
@@ -60,3 +68,4 @@ char cb_readb(cbuffer_t * b)
     return r;
 }
 
+#endif

@@ -23,6 +23,7 @@ void usart_init(int enable_stream);
 
 /** put binary data byte b */
 void usart_putbyte(char b);
+char usart_getbyte();
 
 #ifdef SERIAL_FGETS
 /** fgets that supports both \r and \n line terminator.*/

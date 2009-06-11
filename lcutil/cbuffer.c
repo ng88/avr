@@ -3,8 +3,8 @@
  */
 
 #include "cbuffer.h"
-
-void cb_write(cbuffer_t * b, char c)
+#include  <stdio.h>
+char cb_write(cbuffer_t * b, char c)
 {
     int size;
     if(b->write >= b->read)
@@ -12,8 +12,8 @@ void cb_write(cbuffer_t * b, char c)
     else
 	size = CBUFF_SIZE - 1 - b->read + b->write;
 
-    if(size == CBUFF_SIZE - 2) // 1 byte lost!
-	(void)cb_read(b);
+    if(size == CBUFF_SIZE - 2) // full!
+	return 0;
 
     if(b->write == CBUFF_SIZE - 1)
 	b->write = 0;
@@ -21,6 +21,7 @@ void cb_write(cbuffer_t * b, char c)
 	b->write++;
 
     b->data[b->write] = c;
+    return 1;
 }
 
 int cb_read(cbuffer_t * b)
@@ -35,4 +36,5 @@ int cb_read(cbuffer_t * b)
 
     return b->data[b->read];
 }
+
 

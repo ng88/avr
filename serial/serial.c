@@ -43,6 +43,12 @@ int usart_getchar(FILE * stream)
     return UDR;
 }
 
+char usart_getbyte()
+{
+    while((UCSRA & (1 << RXC)) == 0);
+    return UDR;
+}
+
 int usart_putchar(char c, FILE * stream)
 {
     if(c == '\n')
