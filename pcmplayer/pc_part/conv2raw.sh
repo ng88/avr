@@ -1,5 +1,5 @@
 #!/bin/sh
-freq=7031
+freq=20000 #28800  #7031
 
 tmp=/tmp/$$_$RANDOM.wav
 sox $1 -r $freq -b -c 1 $tmp avg
