@@ -7,16 +7,18 @@ PROGRAMMER=avr910
 PORT=/dev/ttyUSB0
 DUDEFLAGS=
 
-all: compile
+all: A.hex
 
-compile:
-	avr-gcc -W -Wall  -Os  -mmcu=$(MMCU) led2.c  -DF_CPU=$(FCPU)
+A.hex: main.c local_pin_config.h
+	avr-gcc -W -Wall  -Os  -mmcu=$(MMCU) main.c -I.. -DF_CPU=$(FCPU)
 	avr-objcopy -O ihex -R .eeprom a.out A.hex
 	rm a.out
 
-flash: compile
+flash: A.hex
 	avrdude -c $(PROGRAMMER) -p $(PART) -P $(PORT)  -V -U flash:w:A.hex $(DUDEFLAGS)
 
 
+clean:
+	rm A.hex *.o
 
-.PHONY: compile all flash
+.PHONY: all flash

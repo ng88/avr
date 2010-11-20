@@ -49,6 +49,18 @@ char usart_getbyte()
     return UDR;
 }
 
+uint16_t usart_getword()
+{
+    uint16_t r;
+    while((UCSRA & (1 << RXC)) == 0);
+    r = UDR;
+    r <<= 8;
+    while((UCSRA & (1 << RXC)) == 0);
+    r |= UDR;
+    return r; 
+}
+
+
 int usart_putchar(char c, FILE * stream)
 {
     if(c == '\n')
