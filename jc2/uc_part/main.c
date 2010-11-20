@@ -5,10 +5,11 @@
 #include <avr/interrupt.h>
 #include <lcutil/iocompat.h>
 
-#include "local_pin_config.h"
 
-#define ISC0_FALLING_EDGE 2
-#define ISC0_RISING_EDGE 3
+#include <serial/serial.h>
+
+#include "local_pin_config.h"
+#include "protocol.h"
 
 /**
  *
@@ -23,54 +24,9 @@
 
 #define LB_LED_DELAY 150
 
-#define MT_MAX_SPEED 127
+#define MT_MAX_SPEED 255
 #define MT_MIN_SPEED 60
 
-typedef enum
-{
-    CMD_SET_SPEED = 10,
-    CMD_SET_TSPEED = 11,
-    CMD_SET_LED = 20,
-} cmd_type_t;
-
-typedef enum
-{
-    MD_OFF = 0,
-    /** speed is set synchronously */
-    MD_SPEED = 1,
-    /** speed & len are set synchronously */
-    MD_TSPEED = 2,
-    /** program execution mode */
-    MD_PROGRAM = 3,
-} motor_mode_t;
-
-
-/** Command:
- *  1 byte header (cmd_type_t) | payload
- *
- *  Motor commands:
- *    Set speed:
- *      CMD_SET_SPEED   (uint8) 
- *      speed_value     (uint8)
- *        between MT_MIN_SPEED & MT_MAX_SPEED
- *
- *    Set speed during a given time:
- *      CMD_SET_TSPEED
- *      speed_value     (uint8)
- *        between MT_MIN_SPEED & MT_MAX_SPEED or 0
- *      length        (uint16)
- *        in PWM timer tick
- *
- *  LED commands:
- *    Set led:
- *      CMD_SET_LED     (uint8) 
- *      status          (uint8)
- *        0 -> LED OFF, other value -> LED ON
- *
- *
- *
- *  CMD_SET_TSPEED | speed_value (uint8) | length (uint16)
- */
 
 volatile uint8_t       motor_speed = 0;
 volatile uint16_t      motor_len = 0;
@@ -100,6 +56,7 @@ void process_incoming_command()
     switch(usart_getbyte())
     {
     case CMD_SET_SPEED:
+    {
 	uint8_t new_speed = usart_getbyte();
 	if(new_speed < MT_MIN_SPEED || new_speed > MT_MAX_SPEED)
 	    new_speed = 0;
@@ -108,8 +65,9 @@ void process_incoming_command()
 	set_motor_speed(new_speed);
 	sei();
 	break;
-
+    }
     case CMD_SET_TSPEED:
+    {
 	uint8_t new_speed = usart_getbyte();
 	uint16_t new_len  = usart_getword();
 
@@ -122,6 +80,11 @@ void process_incoming_command()
 	set_motor_run_len(new_len);
 	sei();
 	break;
+    }
+    case CMD_GET_SPEED_LIM:
+	usart_putbyte(CMD_GET_SPEED_LIM_ANS);
+	usart_putbyte(MT_MIN_SPEED);
+	usart_putbyte(MT_MAX_SPEED);
 
     case CMD_SET_LED:
 	set_led(usart_getbyte());
@@ -166,6 +129,8 @@ void change_speed()
 
 int main()
 {
+
+    usart_init(0);
 
     /* Timer 1: Fast PWM, 8-bit  p98 */
     TCCR1A = _BV(WGM10) | _BV(WGM12) | _BV(COM1A1);//TIMER1_PWM_INIT;
@@ -222,6 +187,9 @@ int main()
 
     while(1)
     {
+
+	process_incoming_command();
+
     }
 
     return 0;
