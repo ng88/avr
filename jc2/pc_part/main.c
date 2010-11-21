@@ -37,9 +37,8 @@ void set_led(char s)
 /** Return non-zero on success*/
 int get_motor_speed_limits(int * minl, int * maxl)
 {
-    *minl=60;*maxl=127;    return 1;
-
     fputc(CMD_GET_SPEED_LIM, dev);
+    fflush(dev);
     if(fgetc(dev) == CMD_GET_SPEED_LIM_ANS)
     {
 	*minl = fgetc(dev);
@@ -53,6 +52,7 @@ void set_motor_speed(char speed)
 {
     fputc(CMD_SET_SPEED, dev);
     fputc(speed, dev);
+    fflush(dev);
 }
 
 void set_motor_speed_for_len(char speed, int len)
@@ -60,6 +60,33 @@ void set_motor_speed_for_len(char speed, int len)
     fputc(CMD_SET_TSPEED, dev);
     fputc(speed, dev);
     fputw(len, dev);
+    fflush(dev);
+}
+
+void send_program_from_file(char * filename)
+{
+    FILE * f = fopen(filename, "r");
+    if(!f)
+	printf("can't open `%s'!\n", filename);
+    else
+    {
+	int r, speed, len;
+
+	// clear current program
+	fputc(CMD_PROGRAM_CLEAR, dev);
+
+	while( (r = fscanf(f, "%d %d\n", &speed, &len)) == 2 && r != EOF)
+	{
+	    printf("adding instruction: speed=%d\t len=%d\n", speed, len);
+
+	    fputc(CMD_PROGRAM_ADD_TSPEED, dev);
+	    fputc(speed, dev);
+	    fputw(len, dev);
+	}
+
+	fflush(dev);
+	fclose(f);
+    }
 }
 
 void print_help()
@@ -75,11 +102,13 @@ void print_help()
 	"                see \"get limits\" for bounds\n"
 	"set tspeed n t  set speed to n during t time step\n"
 	"                see \"get limits\" for bounds\n"
+	"set program fn  read the text file fn and send the program\n"
+	"                that it contains to the target.\n"
+	"                file format is one line per instruction with 2 columns:\n"
+	"                     speed_value len (like tspeed)\n"
 	);
 }
 
-/** prints the argument value continously
- */
 int main(int argc, char ** argv)
 {
     if(argc < 2)
@@ -102,15 +131,21 @@ int main(int argc, char ** argv)
     if(histfile)
 	read_history(histfile);
 
+    enum { MAX_LN = 256 };
+
     int quit = 0;
     int a1, a2, r;
+    char a3[MAX_LN];
     char * l;
     while( !quit && (l = readline(":[MC]> ")) )
     {
-	int cmdok = 1;
+	int ignore = 0;
+
+	if(strlen(l) >= MAX_LN)
+	    l[MAX_LN - 1] = '\0';
 	
 	if(!l || l[0] == '\0')
-	    cmdok = 0; //ignore
+	    ignore = 1;
 	else if(l[0] == '?' || !strcmp(l, "help"))
 	    print_help();
 	else if(!strcmp(l, "quit") || !strcmp(l, "exit"))
@@ -128,14 +163,14 @@ int main(int argc, char ** argv)
 	    set_motor_speed(a1);
 	else if( (r = sscanf(l, "set tspeed %d %d", &a1, &a2)) == 2 && r != EOF)
 	    set_motor_speed_for_len(a1, a2);
+	else if( (r = sscanf(l, "set program %s", a3)) == 1 && r != EOF)
+	    send_program_from_file(a3);
 	else
-	{
 	    puts("unrecognized command, try \"help\"");
-	    cmdok = 0;
-	}
 
-//	if(cmdok)
-	add_history(l);
+
+	if(!ignore)
+	    add_history(l);
 
 	free(l);
     }

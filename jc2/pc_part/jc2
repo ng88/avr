@@ -1,4 +1,14 @@
 #!/bin/sh
 
-export HISTORY_PATH=~/.jc2_history
-exec ./jc2-bin "$@"
+HISTORY_PATH=~/.jc2_history
+DEV=/dev/ttyUSB0
+RSSPEED=4800
+
+stty -F $DEV $(cat stty_serial_conf) > /dev/null 2>&1
+stty -F $DEV speed $RSSPEED > /dev/null 2>&1
+
+stty -F $DEV
+
+export HISTORY_PATH
+exec ./jc2-bin $DEV
+

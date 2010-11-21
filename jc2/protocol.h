@@ -12,6 +12,11 @@ typedef enum
 
     CMD_SET_LED = 20,
 
+    CMD_PROGRAM_CLEAR = 30,
+    CMD_PROGRAM_ADD_TSPEED = 31,
+    CMD_PROGRAM_START = 32,
+    CMD_PROGRAM_STOP = 33,
+
 } cmd_type_t;
 
 
@@ -43,6 +48,29 @@ typedef enum
  *      max     (uint8)
  *        max motor speed
  *   
+ *
+ *  Motor program commands:
+ *    Clear program:
+ *      CMD_PROGRAM_CLEAR   (uint8) 
+ *      clear the current program
+ *      ignored if the programmed is started
+ *
+ *    Add a program instruction
+ *      CMD_PROGRAM_ADD_TSPEED
+ *      speed_value     (uint8)
+ *        between local min speed & max speed or 0
+ *        see CMD_GET_SPEED_LIM
+ *      length        (uint16)
+ *        in PWM timer tick
+ *      ignored if the programmed is started
+ *
+ *    Start the program stored in memory:
+ *      CMD_PROGRAM_START   (uint8) 
+ *
+ *    Stop the running program:
+ *      CMD_PROGRAM_STOP   (uint8) 
+ *
+ *
  *
  *  LED commands:
  *    Set led:

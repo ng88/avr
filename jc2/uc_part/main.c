@@ -27,6 +27,14 @@
 #define MT_MAX_SPEED 255
 #define MT_MIN_SPEED 60
 
+#define PROGRAM_MAX_SIZE 64
+
+typedef struct
+{
+    uint8_t  speed;
+    uint16_t len;
+} program_instr_t;
+
 typedef enum
 {
     MD_OFF = 0,
@@ -43,6 +51,10 @@ volatile uint8_t       motor_speed = 0;
 volatile uint16_t      motor_len = 0;
 volatile motor_mode_t  motor_mode  = MD_OFF;
 
+volatile program_instr_t program[PROGRAM_MAX_SIZE];
+volatile uint8_t         program_idx = 0;
+volatile uint8_t         program_size = 0;
+
 #define set_motor_mode(x) motor_mode = (x)
 #define set_motor_speed(x) motor_speed = (x)
 #define set_motor_run_len(x) motor_len = (x)
@@ -55,6 +67,17 @@ void set_led(char v)
 	LB_PORT &= ~_BV(LB_PIN);
 }
 
+inline void program_exec_instr()
+{
+    if(program_idx < PROGRAM_MAX_SIZE)
+    {
+	set_motor_speed(program[program_idx].speed);
+	set_motor_run_len(program[program_idx].len);
+	program_idx++;
+    }
+}
+
+
 /** PWM timer */
 ISR(TIMER1_OVF_vect)
 {
@@ -65,6 +88,15 @@ ISR(TIMER1_OVF_vect)
 	else
 	    motor_len--;
     }
+    else if(motor_mode == MD_PROGRAM)
+    {
+	if(motor_len == 0)
+	    program_exec_instr();
+	else
+	    motor_len--;
+    }
+
+
     OCR = motor_speed;
 }
 
@@ -102,14 +134,56 @@ void process_incoming_command()
 	usart_putbyte(CMD_GET_SPEED_LIM_ANS);
 	usart_putbyte(MT_MIN_SPEED);
 	usart_putbyte(MT_MAX_SPEED);
+	break;
 
     case CMD_SET_LED:
 	set_led(usart_getbyte());
 	break;
 
+    case CMD_PROGRAM_CLEAR:
+	if(motor_mode != MD_PROGRAM)
+	    program_size = 0;
+	break;
+
+    case CMD_PROGRAM_ADD_TSPEED:
+	if(motor_mode != MD_PROGRAM)
+	{
+	    uint8_t new_speed = usart_getbyte();
+	    uint16_t new_len  = usart_getword();
+
+	    if(new_speed < MT_MIN_SPEED || new_speed > MT_MAX_SPEED)
+		new_speed = 0;
+
+	    if(program_size < PROGRAM_MAX_SIZE - 1)
+	    {
+		program[program_size].speed = new_speed;
+		program[program_size].len = new_len;
+		program_size++;
+	    }
+	}
+	break;
+
+    case CMD_PROGRAM_START:
+	if(motor_mode != MD_PROGRAM && program_size > 0)
+	{
+	    cli();
+	    program_idx = 0;
+	    set_motor_mode(MD_PROGRAM);
+	    program_exec_instr();
+	    sei();
+	}
+	break;
+
+    case CMD_PROGRAM_STOP:
+	cli();
+	set_motor_mode(MD_SPEED);
+	set_motor_speed(0);
+	sei();
+	break;
     }
 }
 
+#if 0
 void change_speed()
 {
     
@@ -142,7 +216,7 @@ void change_speed()
     }
 
 }
-
+#endif
 
 int main()
 {
@@ -169,38 +243,10 @@ int main()
     LB_DDR |= _BV(LB_PIN);
     MT_DDR |= _BV(MT_PIN);
 
-
-    motor_speed = MT_MIN_SPEED;
-
     /* Enable timer 1 overflow interrupt. */
     TIMSK = _BV (TOIE1);
     sei();
 
-
-/*
-    enum { N = 15 };
-    uint8_t s[N] = { 128, 61, 100, 80, 110, 0, 120, 0, 0, 120, 110, 100, 0, 0, 0 };
-    uint8_t i = 0;
-
-    while(1)
-    {
-	LB_PORT |= _BV(LB_PIN);
-	_delay_ms(LB_LED_DELAY);
-
-	//change_speed();
-
-	LB_PORT &= ~_BV(LB_PIN);
-	_delay_ms(LB_LED_DELAY << 1);
-
-	//change_speed();
-
-	motor_speed = s[i];
-
-	i++;
-	if(i == N)
-	    i = 0;
-    }
-*/
 
     while(1)
     {
