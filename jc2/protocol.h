@@ -14,17 +14,6 @@ typedef enum
 
 } cmd_type_t;
 
-typedef enum
-{
-    MD_OFF = 0,
-    /** speed is set synchronously */
-    MD_SPEED = 1,
-    /** speed & len are set synchronously */
-    MD_TSPEED = 2,
-    /** program execution mode */
-    MD_PROGRAM = 3,
-} motor_mode_t;
-
 
 /** Command:
  *  1 byte header (cmd_type_t) | payload

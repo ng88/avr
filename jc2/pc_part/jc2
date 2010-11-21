@@ -1,0 +1,4 @@
+#!/bin/sh
+
+export HISTORY_PATH=~/.jc2_history
+exec ./jc2-bin "$@"

@@ -27,6 +27,17 @@
 #define MT_MAX_SPEED 255
 #define MT_MIN_SPEED 60
 
+typedef enum
+{
+    MD_OFF = 0,
+    /** speed is set synchronously */
+    MD_SPEED = 1,
+    /** speed & len are set synchronously */
+    MD_TSPEED = 2,
+    /** program execution mode */
+    MD_PROGRAM = 3,
+} motor_mode_t;
+
 
 volatile uint8_t       motor_speed = 0;
 volatile uint16_t      motor_len = 0;
@@ -47,7 +58,13 @@ void set_led(char v)
 /** PWM timer */
 ISR(TIMER1_OVF_vect)
 {
-    
+    if(motor_mode == MD_TSPEED)
+    {
+	if(motor_len == 0)
+	    motor_speed = 0;
+	else
+	    motor_len--;
+    }
     OCR = motor_speed;
 }
 

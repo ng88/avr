@@ -1,4 +1,4 @@
 
 
 all:
-	gcc -W -Wall main.c -o jc2 -I.. -lreadline -ltermcap
+	gcc -W -Wall main.c -o jc2-bin -I.. -lreadline -ltermcap

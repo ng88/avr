@@ -2,9 +2,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <readline/readline.h>
+#include <readline/history.h>
 
 
 #include "protocol.h"
+
+// the HISTORY_PATH env variable is used to store the command history (optional)
+#define HISTORY_MAX  1000
 
 static FILE * dev;
 
@@ -58,6 +62,22 @@ void set_motor_speed_for_len(char speed, int len)
     fputw(len, dev);
 }
 
+void print_help()
+{
+    puts(
+	"help            print this help\n"
+	"?               print this help\n"
+	"exit            exit\n"
+	"quit            exit\n"
+	"get limits      retrieve system limits\n"
+	"set led n       change led status to n\n"
+	"set speed n     change speed to n\n"
+	"                see \"get limits\" for bounds\n"
+	"set tspeed n t  set speed to n during t time step\n"
+	"                see \"get limits\" for bounds\n"
+	);
+}
+
 /** prints the argument value continously
  */
 int main(int argc, char ** argv)
@@ -74,28 +94,59 @@ int main(int argc, char ** argv)
 	fprintf(stderr, "unable to open device `%s'\n", argv[1]);
 	return EXIT_FAILURE;
     }
+    char * histfile = getenv("HISTORY_PATH");
+    if(histfile && !histfile[0])
+	histfile = NULL;
 
+    using_history();
+    if(histfile)
+	read_history(histfile);
 
-    /** request speed limits */
-    int min_speed, max_speed;
-    if(get_motor_speed_limits(&min_speed, &max_speed))
+    int quit = 0;
+    int a1, a2, r;
+    char * l;
+    while( !quit && (l = readline(":[MC]> ")) )
     {
-	printf("motor speed limits: [%d, %d]\n", min_speed, max_speed);
-	set_led(1);
-
-	char * l;
-	while( (l = readline(":[MC]> ")) )
+	int cmdok = 1;
+	
+	if(!l || l[0] == '\0')
+	    cmdok = 0; //ignore
+	else if(l[0] == '?' || !strcmp(l, "help"))
+	    print_help();
+	else if(!strcmp(l, "quit") || !strcmp(l, "exit"))
+	    quit = 1;
+	else if(!strcmp(l, "get limits"))
 	{
-
-	    free(l);
+	    if(get_motor_speed_limits(&a1, &a2))
+		printf("motor speed limits: [%d, %d]\n", a1, a2);
+	    else
+		puts("unable to retrieve speed limits!");
+	}
+	else if( (r = sscanf(l, "set led %d", &a1)) == 1 && r != EOF)
+	    set_led(a1);
+	else if( (r = sscanf(l, "set speed %d", &a1)) == 1 && r != EOF)
+	    set_motor_speed(a1);
+	else if( (r = sscanf(l, "set tspeed %d %d", &a1, &a2)) == 2 && r != EOF)
+	    set_motor_speed_for_len(a1, a2);
+	else
+	{
+	    puts("unrecognized command, try \"help\"");
+	    cmdok = 0;
 	}
 
+//	if(cmdok)
+	add_history(l);
+
+	free(l);
     }
-    else
-	printf("unable to get speed limits\n");
 
     fclose(dev);
 
+    if(histfile)
+    {
+	write_history(histfile);
+	history_truncate_file(histfile, HISTORY_MAX);
+    }
     return EXIT_SUCCESS;
 }
 
