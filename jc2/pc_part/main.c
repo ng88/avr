@@ -89,6 +89,19 @@ void send_program_from_file(char * filename)
     }
 }
 
+
+void start_program()
+{
+    fputc(CMD_PROGRAM_START, dev);
+    fflush(dev);
+}
+
+void stop_program()
+{
+    fputc(CMD_PROGRAM_STOP, dev);
+    fflush(dev);
+}
+
 void print_help()
 {
     puts(
@@ -102,10 +115,12 @@ void print_help()
 	"                see \"get limits\" for bounds\n"
 	"set tspeed n t  set speed to n during t time step\n"
 	"                see \"get limits\" for bounds\n"
-	"set program fn  read the text file fn and send the program\n"
+	"load program fn read the text file fn and send the program\n"
 	"                that it contains to the target.\n"
 	"                file format is one line per instruction with 2 columns:\n"
 	"                     speed_value len (like tspeed)\n"
+	"start program  start the loaded program.\n"
+	"stop program   stop running program.\n"
 	);
 }
 
@@ -163,8 +178,12 @@ int main(int argc, char ** argv)
 	    set_motor_speed(a1);
 	else if( (r = sscanf(l, "set tspeed %d %d", &a1, &a2)) == 2 && r != EOF)
 	    set_motor_speed_for_len(a1, a2);
-	else if( (r = sscanf(l, "set program %s", a3)) == 1 && r != EOF)
+	else if( (r = sscanf(l, "load program %s", a3)) == 1 && r != EOF)
 	    send_program_from_file(a3);
+	else if(!strcmp(l, "start program"))
+	    start_program();
+	else if(!strcmp(l, "stop program"))
+	    stop_program();
 	else
 	    puts("unrecognized command, try \"help\"");
 
