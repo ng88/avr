@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-
+#include <string.h>
 
 #include "protocol.h"
 
@@ -63,14 +63,37 @@ void set_motor_speed_for_len(char speed, int len)
     fflush(dev);
 }
 
+char * dyn_concat(const char * s1, const char * s2)
+{
+    int n1 = strlen(s1);
+    int n2 = strlen(s2);
+    char * r = (char*)malloc(n1 + n2 + 1);
+    if(r)
+    {
+	memcpy(r, s1, n1);
+	memcpy(r + n1, s2, n2);
+	r[n1 + n2] = '\0';
+    }
+    return r;
+}
+
 void send_program_from_file(char * filename)
 {
-    FILE * f = fopen(filename, "r");
+    FILE  * f = fopen(filename, "r");
     if(!f)
-	printf("can't open `%s'!\n", filename);
+    {
+	char * s = dyn_concat(filename, ".prg");
+	f = fopen(s, "r");
+	free(s);
+    }
+    if(!f)
+	printf("can't open `%s' or `%s.prg'!\n", filename, filename);
     else
     {
 	int r, speed, len;
+
+	// stop program
+	fputc(CMD_PROGRAM_STOP, dev);
 
 	// clear current program
 	fputc(CMD_PROGRAM_CLEAR, dev);
@@ -163,7 +186,7 @@ int main(int argc, char ** argv)
 	    ignore = 1;
 	else if(l[0] == '?' || !strcmp(l, "help"))
 	    print_help();
-	else if(!strcmp(l, "quit") || !strcmp(l, "exit"))
+	else if(!strcmp(l, "quit") || !strcmp(l, "exit")) || !strcmp(l, "q"))
 	    quit = 1;
 	else if(!strcmp(l, "get limits"))
 	{

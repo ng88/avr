@@ -164,7 +164,7 @@ void process_incoming_command()
 	break;
 
     case CMD_PROGRAM_START:
-	if(motor_mode != MD_PROGRAM && program_size > 0)
+	if(program_size > 0)
 	{
 	    cli();
 	    program_idx = 0;
